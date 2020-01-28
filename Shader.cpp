@@ -5,7 +5,7 @@
 #include "Shader.h"
 
 Shader::Shader(const std::string& shader_name) {
-    program_id = glCreateProgram();
+    program = glCreateProgram();
 
     std::vector<GLuint> shaders_ids;
 
@@ -40,7 +40,7 @@ Shader::Shader(const std::string& shader_name) {
                 std::string error_msg(max_length, ' ');
                 glGetShaderInfoLog(shaders_ids.back(), max_length, &max_length, error_msg.data());
 
-                glDeleteProgram(program_id);
+                glDeleteProgram(program);
 
                 for (GLuint shader_id : shaders_ids) {
                     glDeleteShader(shader_id);
@@ -50,7 +50,7 @@ Shader::Shader(const std::string& shader_name) {
                                        " finished with error: " + error_msg);
             }
 
-            glAttachShader(program_id, shaders_ids.back());
+            glAttachShader(program, shaders_ids.back());
 
             ifs.close();
         }
@@ -60,18 +60,18 @@ Shader::Shader(const std::string& shader_name) {
         throw std::logic_error("[Shader] not found shaders with name " + shader_name);
     }
 
-    glLinkProgram(program_id);
+    glLinkProgram(program);
 
     GLint is_linked = 0;
-    glGetProgramiv(program_id, GL_LINK_STATUS, &is_linked);
+    glGetProgramiv(program, GL_LINK_STATUS, &is_linked);
     if (is_linked == GL_FALSE) {
         GLint max_length = 0;
-        glGetProgramiv(program_id, GL_INFO_LOG_LENGTH, &max_length);
+        glGetProgramiv(program, GL_INFO_LOG_LENGTH, &max_length);
 
         std::string error_msg(max_length, ' ');
-        glGetProgramInfoLog(program_id, max_length, &max_length, error_msg.data());
+        glGetProgramInfoLog(program, max_length, &max_length, error_msg.data());
 
-        glDeleteProgram(program_id);
+        glDeleteProgram(program);
 
         for (GLuint shader_id : shaders_ids) {
             glDeleteShader(shader_id);
@@ -82,11 +82,79 @@ Shader::Shader(const std::string& shader_name) {
     }
 
     for (GLuint shader_id : shaders_ids) {
-        glDetachShader(program_id, shader_id);
+        glDetachShader(program, shader_id);
     }
 
 }
 
 Shader::~Shader() {
-    glDeleteProgram(program_id);
+    glDeleteProgram(program);
+}
+
+void Shader::activate() {
+    glUseProgram(program);
+}
+
+void Shader::set(const std::string &uniform, const glm::vec1 &data) {
+    GLint location = glGetUniformLocation(program, uniform.c_str());
+    glProgramUniform1fv(program, location, 1, glm::value_ptr(data));
+}
+void Shader::set(const std::string &uniform, const glm::vec2 &data) {
+    GLint location = glGetUniformLocation(program, uniform.c_str());
+    glProgramUniform2fv(program, location, 1, glm::value_ptr(data));
+}
+void Shader::set(const std::string &uniform, const glm::vec3 &data) {
+    GLint location = glGetUniformLocation(program, uniform.c_str());
+    glProgramUniform3fv(program, location, 1, glm::value_ptr(data));
+}
+void Shader::set(const std::string &uniform, const glm::vec4 &data) {
+    GLint location = glGetUniformLocation(program, uniform.c_str());
+    glProgramUniform4fv(program, location, 1, glm::value_ptr(data));
+}
+
+void Shader::set(const std::string &uniform, const glm::ivec1 &data) {
+    GLint location = glGetUniformLocation(program, uniform.c_str());
+    glProgramUniform1iv(program, location, 1, glm::value_ptr(data));
+}
+void Shader::set(const std::string &uniform, const glm::ivec2 &data) {
+    GLint location = glGetUniformLocation(program, uniform.c_str());
+    glProgramUniform2iv(program, location, 1, glm::value_ptr(data));
+}
+void Shader::set(const std::string &uniform, const glm::ivec3 &data) {
+    GLint location = glGetUniformLocation(program, uniform.c_str());
+    glProgramUniform3iv(program, location, 1, glm::value_ptr(data));
+}
+void Shader::set(const std::string &uniform, const glm::ivec4 &data) {
+    GLint location = glGetUniformLocation(program, uniform.c_str());
+    glProgramUniform4iv(program, location, 1, glm::value_ptr(data));
+}
+
+void Shader::set(const std::string &uniform, const glm::uvec1 &data) {
+    GLint location = glGetUniformLocation(program, uniform.c_str());
+    glProgramUniform1uiv(program, location, 1, glm::value_ptr(data));
+}
+void Shader::set(const std::string &uniform, const glm::uvec2 &data) {
+    GLint location = glGetUniformLocation(program, uniform.c_str());
+    glProgramUniform2uiv(program, location, 1, glm::value_ptr(data));
+}
+void Shader::set(const std::string &uniform, const glm::uvec3 &data) {
+    GLint location = glGetUniformLocation(program, uniform.c_str());
+    glProgramUniform3uiv(program, location, 1, glm::value_ptr(data));
+}
+void Shader::set(const std::string &uniform, const glm::uvec4 &data) {
+    GLint location = glGetUniformLocation(program, uniform.c_str());
+    glProgramUniform4uiv(program, location, 1, glm::value_ptr(data));
+}
+
+void Shader::set(const std::string &uniform, const glm::mat2 &data) {
+    GLint location = glGetUniformLocation(program, uniform.c_str());
+    glProgramUniformMatrix2fv(program, location, 1, GL_FALSE, glm::value_ptr(data));
+}
+void Shader::set(const std::string &uniform, const glm::mat3 &data) {
+    GLint location = glGetUniformLocation(program, uniform.c_str());
+    glProgramUniformMatrix3fv(program, location, 1, GL_FALSE, glm::value_ptr(data));
+}
+void Shader::set(const std::string &uniform, const glm::mat4 &data) {
+    GLint location = glGetUniformLocation(program, uniform.c_str());
+    glProgramUniformMatrix4fv(program, location, 1, GL_FALSE, glm::value_ptr(data));
 }
