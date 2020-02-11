@@ -1,0 +1,9 @@
+[submodule "submodules/glm"]
+	path = submodules/glm
+	url = https://github.com/g-truc/glm.git
+[submodule "submodules/json"]
+	path = submodules/json
+	url = https://github.com/nlohmann/json.git
+[submodule "submodules/glfw"]
+	path = submodules/glfw
+	url = https://github.com/glfw/glfw.git
