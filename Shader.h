@@ -27,17 +27,14 @@ public:
 
     // Uniform
     // TODO: Try delete copy-paste
-    void set(const std::string &uniform, const glm::vec1 &data);
     void set(const std::string &uniform, const glm::vec2 &data);
     void set(const std::string &uniform, const glm::vec3 &data);
     void set(const std::string &uniform, const glm::vec4 &data);
 
-    void set(const std::string &uniform, const glm::ivec1 &data);
     void set(const std::string &uniform, const glm::ivec2 &data);
     void set(const std::string &uniform, const glm::ivec3 &data);
     void set(const std::string &uniform, const glm::ivec4 &data);
 
-    void set(const std::string &uniform, const glm::uvec1 &data);
     void set(const std::string &uniform, const glm::uvec2 &data);
     void set(const std::string &uniform, const glm::uvec3 &data);
     void set(const std::string &uniform, const glm::uvec4 &data);

@@ -95,10 +95,6 @@ void Shader::activate() {
     glUseProgram(program);
 }
 
-void Shader::set(const std::string &uniform, const glm::vec1 &data) {
-    GLint location = glGetUniformLocation(program, uniform.c_str());
-    glProgramUniform1fv(program, location, 1, glm::value_ptr(data));
-}
 void Shader::set(const std::string &uniform, const glm::vec2 &data) {
     GLint location = glGetUniformLocation(program, uniform.c_str());
     glProgramUniform2fv(program, location, 1, glm::value_ptr(data));
@@ -112,10 +108,6 @@ void Shader::set(const std::string &uniform, const glm::vec4 &data) {
     glProgramUniform4fv(program, location, 1, glm::value_ptr(data));
 }
 
-void Shader::set(const std::string &uniform, const glm::ivec1 &data) {
-    GLint location = glGetUniformLocation(program, uniform.c_str());
-    glProgramUniform1iv(program, location, 1, glm::value_ptr(data));
-}
 void Shader::set(const std::string &uniform, const glm::ivec2 &data) {
     GLint location = glGetUniformLocation(program, uniform.c_str());
     glProgramUniform2iv(program, location, 1, glm::value_ptr(data));
@@ -129,10 +121,6 @@ void Shader::set(const std::string &uniform, const glm::ivec4 &data) {
     glProgramUniform4iv(program, location, 1, glm::value_ptr(data));
 }
 
-void Shader::set(const std::string &uniform, const glm::uvec1 &data) {
-    GLint location = glGetUniformLocation(program, uniform.c_str());
-    glProgramUniform1uiv(program, location, 1, glm::value_ptr(data));
-}
 void Shader::set(const std::string &uniform, const glm::uvec2 &data) {
     GLint location = glGetUniformLocation(program, uniform.c_str());
     glProgramUniform2uiv(program, location, 1, glm::value_ptr(data));
