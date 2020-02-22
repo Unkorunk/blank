@@ -14,6 +14,7 @@
 
 #include "../Mouse/MouseEvent.h"
 #include "Component.h"
+#include "Label.h"
 #include "ITreeStructure.h"
 #include "IInputMouse.h"
 

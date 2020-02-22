@@ -32,8 +32,17 @@ namespace GUI {
 
         glDrawArrays(GL_TRIANGLES, 0, 3 * 2);
 
-        this->execute(&Component::setX, this->getX());
-        this->execute(&Component::setY, this->getY());
+        Label *text = this->getChild<Label>();
+        if (text) {
+            text->setWidth(std::min(text->getWidth(), this->getWidth()));
+            text->setHeight(std::min(text->getHeight(), this->getHeight()));
+
+            float width = this->getWidth() - text->getWidth();
+            float height = this->getHeight() - text->getHeight();
+
+            text->setX(this->getX() + width / 2.0f);
+            text->setY(this->getY() - height / 2.0f);
+        }
         this->execute(&Component::draw, shader);
     }
 }

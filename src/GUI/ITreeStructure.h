@@ -28,6 +28,17 @@ namespace GUI {
             removeChildren(std::forward<Args>(args)...);
         }
 
+        template <typename T>
+        T *getChild() {
+            for (Component *child : children) {
+                T *obj = dynamic_cast<T *>(child);
+                if (obj != nullptr) {
+                    return obj;
+                }
+            }
+            return nullptr;
+        }
+
         template <typename F, typename... Args>
         void execute(F&& func, Args&&... args) {
             for (Component *child : children) {
