@@ -13,7 +13,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include "MouseEvent.h"
+#include "Mouse/MouseEvent.h"
 
 #include "Settings.h"
 
@@ -22,6 +22,7 @@
 #include "GUI/Font.h"
 #include "GUI/Button.h"
 #include "GUI/Label.h"
+#include "Mouse/Mouse.h"
 
 class Entry {
 public:
@@ -33,18 +34,11 @@ public:
     void start();
     void update();
 
-    void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
-    void mouseEnterCallback(GLFWwindow* window, int entered);
-    void mouseMoveCallback(GLFWwindow* window, double xpos, double ypos);
-
 private:
     Entry();
     ~Entry();
 
-    double mouse_position_x, mouse_position_y;
     GLFWwindow* window;
-
-    MouseEvent mouse_event;
 
     std::unique_ptr<GUI::Font> roboto_font;
 
@@ -55,6 +49,5 @@ private:
 
     std::map<std::string, Shader> shaders;
 };
-
 
 #endif //BLANK_ENTRY_H

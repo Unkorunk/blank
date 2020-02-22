@@ -12,7 +12,7 @@
 #include <functional>
 #include <GL/glew.h>
 
-#include "../MouseEvent.h"
+#include "../Mouse/MouseEvent.h"
 #include "Component.h"
 #include "ITreeStructure.h"
 

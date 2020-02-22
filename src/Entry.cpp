@@ -4,7 +4,7 @@
 
 #include "Entry.h"
 
-Entry::Entry() : window(), mouse_event(MouseEvent::MOUSE_NOT_CONTAINS) {}
+Entry::Entry() : window() {}
 
 Entry::~Entry() {
 
@@ -37,16 +37,17 @@ void Entry::start() {
     glEnable(GL_BLEND);
 
     glfwSetMouseButtonCallback(this->window, [](GLFWwindow* window, int button, int action, int mods) {
-        Entry::getInstance().mouseButtonCallback(window, button, action, mods);
+        Mouse::getInstance().mouseButtonCallback(window, button, action, mods);
     });
     glfwSetCursorEnterCallback(this->window, [](GLFWwindow *window, int entered) {
-        Entry::getInstance().mouseEnterCallback(window, entered);
+        Mouse::getInstance().mouseEnterCallback(window, entered);
     });
     glfwSetCursorPosCallback(this->window, [](GLFWwindow* window, double xpos, double ypos) {
-        Entry::getInstance().mouseMoveCallback(window, xpos, ypos);
+        Mouse::getInstance().mouseMoveCallback(window, xpos, ypos);
     });
 
-    roboto_font = std::unique_ptr<GUI::Font>(GUI::Font::loadFont("./assets/fonts/Roboto-Light.ttf"));
+    // example
+    roboto_font = std::unique_ptr<GUI::Font>(GUI::Font::loadFont("./assets/fonts/some_font.ttf"));
     roboto_font->setPixelSizes(0, 32);
 
     test_button.setX(-0.2f);
@@ -62,6 +63,7 @@ void Entry::start() {
     test_label.setText("Hello World");
 
     test_button.addChild(&test_label);
+    // ~example
 
     time_prev_frame = std::chrono::system_clock::now();
 }
@@ -73,6 +75,7 @@ void Entry::update() {
     time_prev_frame = time_now_frame;
     float delta_time = delta_time_ms / 1000.0f;
 
+    // example
     Shader &shader = shaders.at("default");
     shader.activate();
 
@@ -82,9 +85,10 @@ void Entry::update() {
 
     int window_width, window_height;
     glfwGetWindowSize(window, &window_width, &window_height);
-    double mouse_x = 2.0 * mouse_position_x / window_width - 1.0,
-            mouse_y = -2.0 * mouse_position_y / window_height + 1.0;
-    if (mouse_event == MouseEvent::MOUSE_PRESS) {
+    std::pair<float, float> mouse_position = Mouse::getInstance().getMousePosition();
+    double mouse_x = 2.0 * mouse_position.first / window_width - 1.0,
+            mouse_y = -2.0 * mouse_position.second / window_height + 1.0;
+    if (Mouse::getInstance().getMouseEvent() == MouseEvent::MOUSE_PRESS) {
         if ((mouse_x > test_button.getX() ||
              abs(mouse_x - test_button.getX()) < std::numeric_limits<float>::epsilon()) &&
             (mouse_y < test_button.getY() ||
@@ -96,66 +100,11 @@ void Entry::update() {
     }
 
     shader.deactivate();
+    // ~example
 
-    switch (mouse_event) {
-        case MouseEvent::MOUSE_DOWN:
-            mouse_event = MouseEvent::MOUSE_PRESS;
-            break;
-        case MouseEvent::MOUSE_UP:
-        case MouseEvent::MOUSE_ENTER:
-            mouse_event = MouseEvent::MOUSE_CONTAINS;
-            break;
-        case MouseEvent::MOUSE_LEAVE:
-            mouse_event = MouseEvent::MOUSE_NOT_CONTAINS;
-            break;
-        default:
-            break;
-    }
+    Mouse::getInstance().update();
 }
 
 void Entry::setWindow(GLFWwindow* window) {
     this->window = window;
 }
-
-void Entry::mouseButtonCallback(GLFWwindow *window, int button, int action, int mods) {
-    if (button == GLFW_MOUSE_BUTTON_LEFT) {
-        if (action == GLFW_PRESS) {
-            switch (mouse_event) {
-                case MouseEvent::MOUSE_UP:
-                case MouseEvent::MOUSE_ENTER:
-                case MouseEvent::MOUSE_CONTAINS:
-                case MouseEvent::MOUSE_MOVE:
-                    mouse_event = MouseEvent::MOUSE_DOWN;
-                    break;
-                case MouseEvent::MOUSE_DOWN:
-                case MouseEvent::MOUSE_PRESS:
-                case MouseEvent::MOUSE_LEAVE:
-                case MouseEvent::MOUSE_NOT_CONTAINS:
-                    throw std::runtime_error("Undefined behavior");
-            }
-        } else if (action == GLFW_RELEASE) {
-            mouse_event = MouseEvent::MOUSE_UP;
-        } else {
-            throw std::runtime_error("Undefined behavior");
-        }
-    }
-}
-
-void Entry::mouseEnterCallback(GLFWwindow *window, int entered) {
-    if (entered == GLFW_TRUE) {
-        this->mouse_event = MouseEvent::MOUSE_ENTER;
-    } else if (entered == GLFW_FALSE) {
-        this->mouse_event = MouseEvent::MOUSE_LEAVE;
-    } else {
-        throw std::runtime_error("Undefined behavior");
-    }
-}
-
-void Entry::mouseMoveCallback(GLFWwindow *window, double xpos, double ypos) {
-    if (this->mouse_event != MouseEvent::MOUSE_PRESS) {
-        this->mouse_event = MouseEvent::MOUSE_MOVE;
-    }
-    this->mouse_position_x = xpos;
-    this->mouse_position_y = ypos;
-}
-
