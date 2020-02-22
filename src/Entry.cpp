@@ -54,9 +54,9 @@ void Entry::start() {
     test_button.setY(0.5f);
     test_button.setWidth(1.0f);
     test_button.setHeight(1.0f);
-    test_button.setMouseDownCallback([](GUI::Button *button, float x, float y) {
-        button->setX(x - button->getWidth() / 2.0f);
-        button->setY(y + button->getHeight() / 2.0f);
+    test_button.setMouseCallback(MouseEvent::MOUSE_PRESS, [this](float x, float y) {
+        test_button.setX(x - test_button.getWidth() / 2.0f);
+        test_button.setY(y + test_button.getHeight() / 2.0f);
     });
 
     test_label.setFont(roboto_font.get());
@@ -86,17 +86,18 @@ void Entry::update() {
     int window_width, window_height;
     glfwGetWindowSize(window, &window_width, &window_height);
     std::pair<float, float> mouse_position = Mouse::getInstance().getMousePosition();
-    double mouse_x = 2.0 * mouse_position.first / window_width - 1.0,
-            mouse_y = -2.0 * mouse_position.second / window_height + 1.0;
-    if (Mouse::getInstance().getMouseEvent() == MouseEvent::MOUSE_PRESS) {
-        if ((mouse_x > test_button.getX() ||
-             abs(mouse_x - test_button.getX()) < std::numeric_limits<float>::epsilon()) &&
-            (mouse_y < test_button.getY() ||
-             abs(mouse_y - test_button.getY()) < std::numeric_limits<float>::epsilon()) &&
-            mouse_x < test_button.getX() + test_button.getWidth() &&
-            mouse_y > test_button.getY() - test_button.getHeight()) {
-            test_button.mouseDown(static_cast<float>(mouse_x), static_cast<float>(mouse_y));
-        }
+    float mouse_x = 2.0f * mouse_position.first / window_width - 1.0f,
+            mouse_y = -2.0f * mouse_position.second / window_height + 1.0f;
+
+    bool mouse_on_button = (mouse_x > test_button.getX() ||
+                            abs(mouse_x - test_button.getX()) < std::numeric_limits<float>::epsilon()) &&
+                           (mouse_y < test_button.getY() ||
+                            abs(mouse_y - test_button.getY()) < std::numeric_limits<float>::epsilon()) &&
+                           mouse_x < test_button.getX() + test_button.getWidth() &&
+                           mouse_y > test_button.getY() - test_button.getHeight();
+
+    if (mouse_on_button) {
+        test_button.mouseEvent(Mouse::getInstance().getMouseEvent(), mouse_x, mouse_y);
     }
 
     shader.deactivate();
