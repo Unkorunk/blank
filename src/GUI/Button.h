@@ -26,6 +26,7 @@ namespace GUI {
         void draw(Shader* shader) override;
 
     private:
+        float radius[4] = {0.05f, 0.05f, 0.05f, 0.05f};
         std::vector<glm::vec2> quadraticCurve(glm::vec2 start, glm::vec2 control, glm::vec2 end);
 
     };

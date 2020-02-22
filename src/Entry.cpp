@@ -26,7 +26,7 @@ void Entry::start() {
         shaders.try_emplace(shader_name, shader_name);
     }
 
-    glClearColor(0.0f, 0.4f, 0.75f, 0.0f);
+    glClearColor(0.0f, 0.3f, 0.65f, 0.0f);
     if (Settings::getInstance().get<std::string>("project_type") == "3d") {
         glEnable(GL_DEPTH_TEST);
     }
@@ -48,16 +48,16 @@ void Entry::start() {
     roboto_font = std::unique_ptr<GUI::Font>(GUI::Font::loadFont("./assets/fonts/some_font.ttf"));
     roboto_font->setPixelSizes(0, 32);
 
-    test_button.setX(-0.2f);
-    test_button.setY(0.5f);
-    test_button.setWidth(1.0f);
-    test_button.setHeight(0.3f);
-    test_button.setMouseCallback(MouseEvent::MOUSE_DOWN, [](float x, float y) {
-        std::cout << "Hello World" << std::endl;
+    test_button.setX(-0.5f / 2.0f);
+    test_button.setY(0.15f / 2.0f);
+    test_button.setWidth(1.0f / 2.0f);
+    test_button.setHeight(0.3f / 2.0f);
+    test_button.setMouseCallback(MouseEvent::MOUSE_UP, [this](float x, float y) {
+        glfwSetWindowShouldClose(this->window, GLFW_TRUE);
     });
 
     test_label.setFont(roboto_font.get());
-    test_label.setText("Test Button");
+    test_label.setText("Exit");
 
     test_button.addChild(&test_label);
     // ~example

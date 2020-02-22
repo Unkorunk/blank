@@ -10,8 +10,12 @@ namespace GUI {
     void Button::draw(Shader *shader) {
         Component::draw(shader);
 
+        radius[0] = this->getWidth() * 0.05f;
+        radius[1] = this->getWidth() * 0.05f;
+        radius[2] = this->getWidth() * 0.05f;
+        radius[3] = this->getWidth() * 0.05f;
+
         shader->set("use_texture", 0);
-        float radius[] = {0.05f, 0.05f, 0.05f, 0.05f};
 
         std::vector<GLfloat> vertices = {
                 this->getX() + this->getWidth() / 2.0f, this->getY() - this->getHeight() / 2.0f, 0.0f,
@@ -55,9 +59,9 @@ namespace GUI {
 
         std::vector<GLfloat> colors((vertices.size() / 3) * 4);
         for (size_t i = 0; i < vertices.size() / 3; i++) {
-            colors[4 * i + 0] = 127.0f / 255.0f;
-            colors[4 * i + 1] = 127.0f / 255.0f;
-            colors[4 * i + 2] = 127.0f / 255.0f;
+            colors[4 * i + 0] = 0.0f / 255.0f;
+            colors[4 * i + 1] = 149.0f / 255.0f;
+            colors[4 * i + 2] = 255.0f / 255.0f;
             colors[4 * i + 3] = 1.0f;
         }
 
@@ -68,8 +72,10 @@ namespace GUI {
 
         Label *text = this->getChild<Label>();
         if (text) {
-            text->setWidth(std::min(text->getWidth(), this->getWidth()));
-            text->setHeight(std::min(text->getHeight(), this->getHeight()));
+            text->setWidth(std::min(text->getWidth(), this->getWidth() - radius[0] - radius[2]));
+            if (text->getHeight() > this->getHeight()) {
+                text->setHeight(std::min(text->getHeight(), this->getHeight() - radius[0] - radius[2]));
+            }
 
             float width = this->getWidth() - text->getWidth();
             float height = this->getHeight() - text->getHeight();

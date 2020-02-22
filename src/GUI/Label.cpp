@@ -38,8 +38,8 @@ namespace GUI {
             max_bitmap_top = std::max(max_bitmap_top, glyph->bitmap_top);
         }
 
-        this->setWidth(1.0f);
-        this->setHeight(static_cast<float>(texture_height) / static_cast<float>(texture_width));
+        Component::setWidth(1.0f);
+        Component::setHeight(static_cast<float>(texture_height) / static_cast<float>(texture_width));
 
         std::unique_ptr<unsigned char[]> buffer(new unsigned char[4 * texture_height * texture_width]());
 
@@ -102,5 +102,15 @@ namespace GUI {
 
     Font *Label::getFont() const {
         return this->font;
+    }
+
+    void Label::setWidth(float width) {
+        Component::setWidth(width);
+        this->height = static_cast<float>(texture.getRows()) * this->getWidth() / static_cast<float>(texture.getCols());
+    }
+
+    void Label::setHeight(float height) {
+        Component::setHeight(height);
+        this->width = static_cast<float>(texture.getCols()) * this->getHeight() / static_cast<float>(texture.getRows());
     }
 }

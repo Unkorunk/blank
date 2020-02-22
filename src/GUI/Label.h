@@ -35,6 +35,9 @@ namespace GUI {
 
         std::string getText() const;
 
+        void setWidth(float width) override;
+        void setHeight(float height) override;
+
     private:
         Texture texture;
 
