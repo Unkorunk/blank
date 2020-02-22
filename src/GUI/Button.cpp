@@ -19,7 +19,15 @@ namespace GUI {
                 this->getX(), this->getY() - this->getHeight(), 0.0f,
                 this->getX() + this->getWidth(), this->getY() - this->getHeight(), 0.0f
         };
+        std::array<GLfloat, 6 * 4> colors = {};
+        for (size_t i = 0; i < 6; i++) {
+            colors[4 * i + 0] = 127.0f / 255.0f;
+            colors[4 * i + 1] = 127.0f / 255.0f;
+            colors[4 * i + 2] = 127.0f / 255.0f;
+            colors[4 * i + 3] = 1.0f;
+        }
 
+        shader->set(2, colors.size() * sizeof(GLfloat), 4, colors.data());
         shader->set(0, vertices.size() * sizeof(GLfloat), 3, vertices.data());
 
         glDrawArrays(GL_TRIANGLES, 0, 3 * 2);
