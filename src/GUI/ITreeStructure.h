@@ -13,6 +13,8 @@
 namespace GUI {
     class ITreeStructure {
     public:
+        virtual ~ITreeStructure() = default;
+
         void addChild(Component* child);
         void removeChild(Component* child);
 
@@ -57,6 +59,9 @@ namespace GUI {
         }
 
         std::set<Component *> children;
+
+    protected:
+        ITreeStructure() = default;
 
     };
 }
