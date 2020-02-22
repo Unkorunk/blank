@@ -1,3 +1,10 @@
 {
-  "shaders": [ "default" ]
+  "title": "Simple Game",
+  "width": 640,
+  "height": 480,
+  "fullscreen": true,
+  "project_type": "2d",
+  "shaders": [
+    "default"
+  ]
 }

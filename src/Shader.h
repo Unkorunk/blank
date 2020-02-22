@@ -5,11 +5,15 @@
 #ifndef BLANK_SHADER_H
 #define BLANK_SHADER_H
 
+#include <iostream>
 #include <string>
 #include <vector>
 #include <utility>
 #include <fstream>
 #include <exception>
+#include <memory>
+#include <functional>
+#include <numeric>
 
 #include <GL/glew.h>
 #include <glm/glm.hpp>
@@ -21,12 +25,12 @@ public:
     ~Shader();
 
     void activate();
+    void deactivate();
 
-    // TODO: Location
+    // Attributes
+    void set(GLuint location, GLsizeiptr count_bytes, GLint elements_in_batch, GLfloat* data);
 
-
-    // Uniform
-    // TODO: Try delete copy-paste
+    // Uniforms
     void set(const std::string &uniform, const glm::vec2 &data);
     void set(const std::string &uniform, const glm::vec3 &data);
     void set(const std::string &uniform, const glm::vec4 &data);
@@ -43,8 +47,13 @@ public:
     void set(const std::string &uniform, const glm::mat3 &data);
     void set(const std::string &uniform, const glm::mat4 &data);
 
+    void set(const std::string &uniform, GLint data);
+
 private:
     GLuint program;
+    GLuint vertex_array;
+    std::vector<GLuint> buffers;
+
 };
 
 #endif //BLANK_SHADER_H

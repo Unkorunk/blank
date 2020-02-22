@@ -1,31 +1,26 @@
 //
-// Created by unkorunk on 26.01.2020.
+// Created by unkorunk on 13.02.2020.
 //
 
-#include "Entry.h"
+#include "Settings.h"
 
-Entry &Entry::getInstance() {
-    static Entry entry;
-    return entry;
+Settings &Settings::getInstance() {
+    static Settings instance;
+    return instance;
 }
 
-void Entry::awake() {
-    glfwWindowHint(GLFW_SAMPLES, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-}
-
-void Entry::start() {
+Settings::Settings() {
     std::ifstream settings_ifs("settings.json");
     if (!settings_ifs.is_open()) {
         throw std::logic_error("[settings.json] not found file");
     }
 
-    json settings_json;
     settings_ifs >> settings_json;
     settings_ifs.close();
+}
+
+std::vector<std::string> Settings::getShaders() const {
+    std::vector<std::string> shaders;
 
     if (!settings_json.contains("shaders")) {
         throw std::logic_error("[settings.json] not contains key - shaders");
@@ -41,13 +36,8 @@ void Entry::start() {
         }
 
         auto shader_name = iter.get<std::string>();
-        shaders.try_emplace(shader_name, shader_name);
+        shaders.push_back(shader_name);
     }
 
-    glClearColor(0.0f, 0.4f, 0.75f, 1.0f);
-    glEnable(GL_DEPTH_TEST);
-}
-
-void Entry::update() {
-
+    return shaders;
 }

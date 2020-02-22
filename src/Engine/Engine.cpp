@@ -1,10 +1,14 @@
+//
+// Created by unkorunk on 13.02.2020.
+//
+
 #include <iostream>
 #include <exception>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include "Entry.h"
+#include "../Entry.h"
 
 int main() {
     GLFWwindow *window;
@@ -23,7 +27,7 @@ int main() {
         return 1;
     }
 
-    window = glfwCreateWindow(640, 480, "blank", nullptr, nullptr);
+    window = glfwCreateWindow(640, 480, "blank engine", nullptr, nullptr);
     if (!window) {
         std::cerr << "[GLFW] failed create window" << std::endl;
         glfwTerminate();
@@ -39,6 +43,8 @@ int main() {
         return 1;
     }
 
+    Entry::getInstance().setWindow(window);
+
     try {
         Entry::getInstance().start();
     } catch (std::exception &ex) {
@@ -49,8 +55,12 @@ int main() {
     }
 
     while (!glfwWindowShouldClose(window)) {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+        int mask = GL_COLOR_BUFFER_BIT;
+        if (Settings::getInstance().get<std::string>("project_type") == "3d") {
+            mask |= GL_DEPTH_BUFFER_BIT;
+        }
+        glClear(mask);
+        
         try {
             Entry::getInstance().update();
         } catch (std::exception &ex) {
