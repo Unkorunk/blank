@@ -7,6 +7,8 @@
 #include <utility>
 
 namespace GUI {
+    IInputMouse::IInputMouse() : mouse_event(MouseEvent::MOUSE_NOT_CONTAINS) {}
+
     void IInputMouse::mouseEvent(MouseEvent mouse_event, float x, float y) {
         this->mouse_event = mouse_event;
         auto iter = callbacks.find(mouse_event);

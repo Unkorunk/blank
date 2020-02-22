@@ -13,16 +13,18 @@
 namespace GUI {
     class IInputMouse {
     public:
+        virtual ~IInputMouse() = default;
+
         void mouseEvent(MouseEvent mouse_event, float x, float y);
-
         void setMouseCallback(MouseEvent mouse_event, std::function<void(float, float)> callback);
-
         MouseEvent getMouseEvent() const;
 
     private:
         std::map<MouseEvent, std::function<void(float, float)>> callbacks;
-
         MouseEvent mouse_event;
+
+    protected:
+        IInputMouse();
 
     };
 }
