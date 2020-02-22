@@ -8,6 +8,8 @@
 
 namespace GUI {
     void Button::draw(Shader *shader) {
+        Component::draw(shader);
+
         shader->set("use_texture", 0);
 
         std::array<GLfloat, 6 * 3> vertices = {

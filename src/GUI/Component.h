@@ -5,8 +5,12 @@
 #ifndef BLANK_GAME_COMPONENT_H
 #define BLANK_GAME_COMPONENT_H
 
+#include <string>
+#include <array>
+
 #include <GL/glew.h>
 
+#include "../Settings.h"
 #include "../Shader.h"
 
 namespace GUI {
@@ -15,7 +19,7 @@ namespace GUI {
         Component();
         virtual ~Component() = default;
 
-        virtual void draw(Shader* shader) = 0;
+        virtual void draw(Shader* shader);
 
         virtual void setX(float x);
         virtual float getX() const;

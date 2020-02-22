@@ -28,6 +28,7 @@ namespace GUI {
 
     void GUI::Texture::draw(Shader *shader) {
         if (!buffer) return;
+        Component::draw(shader);
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture_id);

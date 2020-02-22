@@ -10,6 +10,8 @@ namespace GUI {
     Label::~Label() = default;
 
     void Label::draw(Shader* shader) {
+        Component::draw(shader);
+
         if (font == nullptr || text.empty()) {
             return;
         }
@@ -32,7 +34,7 @@ namespace GUI {
         for (char c : this->text) {
             FT_GlyphSlot glyph = font->getGlyph(c);
             texture_width += (glyph->advance.x >> 6);
-            texture_height = std::max(texture_height, glyph->bitmap_top + glyph->bitmap.rows);
+            texture_height = std::max(texture_height, glyph->bitmap.rows);
             max_bitmap_top = std::max(max_bitmap_top, glyph->bitmap_top);
         }
 
@@ -73,7 +75,7 @@ namespace GUI {
                                                     x + offset_x + glyph->bitmap_left);
                     unsigned char gray = bitmap.buffer[bitmap.pitch * y + x];
 
-                    if (pixel_index < 4 * texture_height * texture_width) {
+                    if (pixel_index + 3 < 4 * texture_height * texture_width) {
                         buffer[pixel_index + 0] = gray;
                         buffer[pixel_index + 1] = gray;
                         buffer[pixel_index + 2] = gray;

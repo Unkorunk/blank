@@ -6,9 +6,7 @@
 
 Entry::Entry() : window() {}
 
-Entry::~Entry() {
-
-}
+Entry::~Entry() = default;
 
 Entry &Entry::getInstance() {
     static Entry entry;
@@ -53,14 +51,13 @@ void Entry::start() {
     test_button.setX(-0.2f);
     test_button.setY(0.5f);
     test_button.setWidth(1.0f);
-    test_button.setHeight(1.0f);
-    test_button.setMouseCallback(MouseEvent::MOUSE_PRESS, [this](float x, float y) {
-        test_button.setX(x - test_button.getWidth() / 2.0f);
-        test_button.setY(y + test_button.getHeight() / 2.0f);
+    test_button.setHeight(0.3f);
+    test_button.setMouseCallback(MouseEvent::MOUSE_DOWN, [](float x, float y) {
+        std::cout << "Hello World" << std::endl;
     });
 
     test_label.setFont(roboto_font.get());
-    test_label.setText("Hello World");
+    test_label.setText("Test Button");
 
     test_button.addChild(&test_label);
     // ~example
@@ -78,8 +75,6 @@ void Entry::update() {
     // example
     Shader &shader = shaders.at("default");
     shader.activate();
-
-    test_label.setText(std::to_string(rand()));
 
     test_button.draw(&shader);
 
