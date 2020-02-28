@@ -13,6 +13,7 @@
 #include <exception>
 #include <memory>
 #include <functional>
+#include <map>
 #include <numeric>
 
 #include <GL/glew.h>
@@ -53,6 +54,7 @@ private:
     GLuint program;
     GLuint vertex_array;
     std::vector<GLuint> buffers;
+    std::map<std::string, GLint> uniform_locations;
 
 };
 

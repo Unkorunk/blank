@@ -150,47 +150,67 @@ void Shader::set(const std::string &uniform, const glm::vec4 &data) {
 }
 
 void Shader::set(const std::string &uniform, const glm::ivec2 &data) {
-    GLint location = glGetUniformLocation(program, uniform.c_str());
-    glProgramUniform2iv(program, location, 1, glm::value_ptr(data));
+    if (uniform_locations.count(uniform) == 0) {
+        uniform_locations[uniform] = glGetUniformLocation(program, uniform.c_str());
+    }
+    glProgramUniform2iv(program, uniform_locations[uniform], 1, glm::value_ptr(data));
 }
 void Shader::set(const std::string &uniform, const glm::ivec3 &data) {
-    GLint location = glGetUniformLocation(program, uniform.c_str());
-    glProgramUniform3iv(program, location, 1, glm::value_ptr(data));
+    if (uniform_locations.count(uniform) == 0) {
+        uniform_locations[uniform] = glGetUniformLocation(program, uniform.c_str());
+    }
+    glProgramUniform3iv(program, uniform_locations[uniform], 1, glm::value_ptr(data));
 }
 void Shader::set(const std::string &uniform, const glm::ivec4 &data) {
-    GLint location = glGetUniformLocation(program, uniform.c_str());
-    glProgramUniform4iv(program, location, 1, glm::value_ptr(data));
+    if (uniform_locations.count(uniform) == 0) {
+        uniform_locations[uniform] = glGetUniformLocation(program, uniform.c_str());
+    }
+    glProgramUniform4iv(program, uniform_locations[uniform], 1, glm::value_ptr(data));
 }
 
 void Shader::set(const std::string &uniform, const glm::uvec2 &data) {
-    GLint location = glGetUniformLocation(program, uniform.c_str());
-    glProgramUniform2uiv(program, location, 1, glm::value_ptr(data));
+    if (uniform_locations.count(uniform) == 0) {
+        uniform_locations[uniform] = glGetUniformLocation(program, uniform.c_str());
+    }
+    glProgramUniform2uiv(program, uniform_locations[uniform], 1, glm::value_ptr(data));
 }
 void Shader::set(const std::string &uniform, const glm::uvec3 &data) {
-    GLint location = glGetUniformLocation(program, uniform.c_str());
-    glProgramUniform3uiv(program, location, 1, glm::value_ptr(data));
+    if (uniform_locations.count(uniform) == 0) {
+        uniform_locations[uniform] = glGetUniformLocation(program, uniform.c_str());
+    }
+    glProgramUniform3uiv(program, uniform_locations[uniform], 1, glm::value_ptr(data));
 }
 void Shader::set(const std::string &uniform, const glm::uvec4 &data) {
-    GLint location = glGetUniformLocation(program, uniform.c_str());
-    glProgramUniform4uiv(program, location, 1, glm::value_ptr(data));
+    if (uniform_locations.count(uniform) == 0) {
+        uniform_locations[uniform] = glGetUniformLocation(program, uniform.c_str());
+    }
+    glProgramUniform4uiv(program, uniform_locations[uniform], 1, glm::value_ptr(data));
 }
 
 void Shader::set(const std::string &uniform, const glm::mat2 &data) {
-    GLint location = glGetUniformLocation(program, uniform.c_str());
-    glProgramUniformMatrix2fv(program, location, 1, GL_FALSE, glm::value_ptr(data));
+    if (uniform_locations.count(uniform) == 0) {
+        uniform_locations[uniform] = glGetUniformLocation(program, uniform.c_str());
+    }
+    glProgramUniformMatrix2fv(program, uniform_locations[uniform], 1, GL_FALSE, glm::value_ptr(data));
 }
 void Shader::set(const std::string &uniform, const glm::mat3 &data) {
-    GLint location = glGetUniformLocation(program, uniform.c_str());
-    glProgramUniformMatrix3fv(program, location, 1, GL_FALSE, glm::value_ptr(data));
+    if (uniform_locations.count(uniform) == 0) {
+        uniform_locations[uniform] = glGetUniformLocation(program, uniform.c_str());
+    }
+    glProgramUniformMatrix3fv(program, uniform_locations[uniform], 1, GL_FALSE, glm::value_ptr(data));
 }
 void Shader::set(const std::string &uniform, const glm::mat4 &data) {
-    GLint location = glGetUniformLocation(program, uniform.c_str());
-    glProgramUniformMatrix4fv(program, location, 1, GL_FALSE, glm::value_ptr(data));
+    if (uniform_locations.count(uniform) == 0) {
+        uniform_locations[uniform] = glGetUniformLocation(program, uniform.c_str());
+    }
+    glProgramUniformMatrix4fv(program, uniform_locations[uniform], 1, GL_FALSE, glm::value_ptr(data));
 }
 
 void Shader::set(const std::string &uniform, GLint data) {
-    GLint location = glGetUniformLocation(program, uniform.c_str());
-    glProgramUniform1i(program, location, data);
+    if (uniform_locations.count(uniform) == 0) {
+        uniform_locations[uniform] = glGetUniformLocation(program, uniform.c_str());
+    }
+    glProgramUniform1i(program, uniform_locations[uniform], data);
 }
 
 void Shader::set(GLuint location, GLsizeiptr count_bytes, GLint elements_in_batch, GLfloat *data) {
