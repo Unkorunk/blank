@@ -57,18 +57,22 @@ namespace GUI {
             push_vec2(this->getX() + point.x, this->getY() + point.y);
         }
 
-        std::vector<GLfloat> colors((vertices.size() / 3) * 4);
+        size_t vertices_count = vertices.size() / 3;
+
+        std::vector<GLfloat> colors(vertices_count * 4);
         for (size_t i = 0; i < vertices.size() / 3; i++) {
             colors[4 * i + 0] = 0.0f / 255.0f;
             colors[4 * i + 1] = 149.0f / 255.0f;
             colors[4 * i + 2] = 255.0f / 255.0f;
             colors[4 * i + 3] = 1.0f;
         }
+        std::vector<GLfloat> uvs(vertices_count * 2);
 
-        shader->set(2, colors.size() * sizeof(GLfloat), 4, colors.data());
         shader->set(0, vertices.size() * sizeof(GLfloat), 3, vertices.data());
+        shader->set(1, uvs.size() * sizeof(GLfloat), 2, uvs.data());
+        shader->set(2, colors.size() * sizeof(GLfloat), 4, colors.data());
 
-        glDrawArrays(GL_TRIANGLE_FAN, 0, static_cast<GLsizei>(vertices.size() / 3));
+        glDrawArrays(GL_TRIANGLE_FAN, 0, static_cast<GLsizei>(vertices_count));
 
         Label *text = this->getChild<Label>();
         if (text) {
