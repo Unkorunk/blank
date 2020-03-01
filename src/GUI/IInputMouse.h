@@ -9,18 +9,19 @@
 #include <map>
 
 #include "../Mouse/MouseEvent.h"
+#include "../Utility/Vector2f.h"
 
 namespace GUI {
     class IInputMouse {
     public:
         virtual ~IInputMouse() = default;
 
-        void mouseEvent(MouseEvent mouse_event, float x, float y);
-        void setMouseCallback(MouseEvent mouse_event, std::function<void(float, float)> callback);
+        void mouseEvent(MouseEvent mouse_event, const Vector2f& position);
+        void setMouseCallback(MouseEvent mouse_event, std::function<void(const Vector2f&)> callback);
         MouseEvent getMouseEvent() const;
 
     private:
-        std::map<MouseEvent, std::function<void(float, float)>> callbacks;
+        std::map<MouseEvent, std::function<void(const Vector2f&)>> callbacks;
         MouseEvent mouse_event;
 
     protected:

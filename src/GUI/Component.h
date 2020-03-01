@@ -12,6 +12,7 @@
 
 #include "../Settings.h"
 #include "../Shader.h"
+#include "../Utility/Vector2f.h"
 
 namespace GUI {
     class Component {
@@ -27,14 +28,20 @@ namespace GUI {
         virtual void setY(float y);
         virtual float getY() const;
 
+        virtual void setPosition(const Vector2f& position);
+        virtual Vector2f getPosition() const;
+
         virtual void setWidth(float width);
         virtual float getWidth() const;
 
         virtual void setHeight(float height);
         virtual float getHeight() const;
 
+        virtual void setSize(const Vector2f& size);
+        virtual Vector2f getSize() const;
+
     protected:
-        float x, y, width, height;
+        Vector2f position, size;
     };
 }
 

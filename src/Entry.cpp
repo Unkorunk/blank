@@ -52,7 +52,7 @@ void Entry::start() {
     test_button.setY(0.15f / 2.0f);
     test_button.setWidth(1.0f / 2.0f);
     test_button.setHeight(0.3f / 2.0f);
-    test_button.setMouseCallback(MouseEvent::MOUSE_UP, [this](float x, float y) {
+    test_button.setMouseCallback(MouseEvent::MOUSE_UP, [this](const Vector2f& position) {
         glfwSetWindowShouldClose(this->window, GLFW_TRUE);
     });
 
@@ -79,9 +79,9 @@ void Entry::update() {
 
     int window_width, window_height;
     glfwGetWindowSize(window, &window_width, &window_height);
-    std::pair<float, float> mouse_position = Mouse::getInstance().getMousePosition();
-    float mouse_x = 2.0f * mouse_position.first / window_width - 1.0f,
-            mouse_y = -2.0f * mouse_position.second / window_height + 1.0f;
+    Vector2f mouse_position = Mouse::getInstance().getMousePosition();
+    float mouse_x = 2.0f * mouse_position.getX() / window_width - 1.0f,
+            mouse_y = -2.0f * mouse_position.getY() / window_height + 1.0f;
 
     bool mouse_on_button = (mouse_x > test_button.getX() ||
                             abs(mouse_x - test_button.getX()) < std::numeric_limits<float>::epsilon()) &&
@@ -91,7 +91,7 @@ void Entry::update() {
                            mouse_y > test_button.getY() - test_button.getHeight();
 
     if (mouse_on_button) {
-        test_button.mouseEvent(Mouse::getInstance().getMouseEvent(), mouse_x, mouse_y);
+        test_button.mouseEvent(Mouse::getInstance().getMouseEvent(), Vector2f(mouse_x, mouse_y));
     }
 
     shader.deactivate();

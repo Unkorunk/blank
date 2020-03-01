@@ -9,11 +9,11 @@
 namespace GUI {
     IInputMouse::IInputMouse() : mouse_event(MouseEvent::MOUSE_NOT_CONTAINS) {}
 
-    void IInputMouse::mouseEvent(MouseEvent mouse_event, float x, float y) {
+    void IInputMouse::mouseEvent(MouseEvent mouse_event, const Vector2f& position) {
         this->mouse_event = mouse_event;
         auto iter = callbacks.find(mouse_event);
         if (iter != callbacks.end() && iter->second) {
-            iter->second(x, y);
+            iter->second(position);
         }
     }
 
@@ -21,7 +21,7 @@ namespace GUI {
         return this->mouse_event;
     }
 
-    void IInputMouse::setMouseCallback(MouseEvent mouse_event, std::function<void(float, float)> callback) {
+    void IInputMouse::setMouseCallback(MouseEvent mouse_event, std::function<void(const Vector2f&)> callback) {
         callbacks[mouse_event] = std::move(callback);
     }
 }

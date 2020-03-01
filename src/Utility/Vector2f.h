@@ -12,6 +12,7 @@ class Vector2f {
 public:
     Vector2f();
     Vector2f(const Vector2f& data);
+    Vector2f(float x, float y);
 
     Vector2f& operator =(const Vector2f& data);
 

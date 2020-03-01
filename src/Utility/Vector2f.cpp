@@ -6,6 +6,7 @@
 
 Vector2f::Vector2f() : x(), y() {}
 Vector2f::Vector2f(const Vector2f &data) : x(data.x), y(data.y) {}
+Vector2f::Vector2f(float x, float y) : x(x), y(y) {}
 
 Vector2f &Vector2f::operator=(const Vector2f &data) = default;
 

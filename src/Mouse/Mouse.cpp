@@ -16,8 +16,8 @@ MouseEvent Mouse::getMouseEvent() const {
     return this->mouse_event;
 }
 
-std::pair<float, float> Mouse::getMousePosition() const {
-    return std::make_pair(
+Vector2f Mouse::getMousePosition() const {
+    return Vector2f(
             static_cast<float>(this->mouse_position_x),
             static_cast<float>(this->mouse_position_y)
     );

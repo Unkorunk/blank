@@ -5,40 +5,38 @@
 #include "Component.h"
 
 namespace GUI {
-    Component::Component() : x(), y(), width(), height() {
-
-    }
+    Component::Component() : position(), size() {}
 
     void Component::setX(float x) {
-        this->x = x;
+        this->position.setX(x);
     }
 
     float Component::getX() const {
-        return this->x;
+        return this->position.getX();
     }
 
     void Component::setY(float y) {
-        this->y = y;
+        this->position.setY(y);
     }
 
     float Component::getY() const {
-        return this->y;
+        return this->position.getY();
     }
 
     void Component::setWidth(float width) {
-        this->width = width;
+        this->size.setX(width);
     }
 
     float Component::getWidth() const {
-        return this->width;
+        return this->size.getX();
     }
 
     void Component::setHeight(float height) {
-        this->height = height;
+        this->size.setY(height);
     }
 
     float Component::getHeight() const {
-        return this->height;
+        return this->size.getY();
     }
 
     void Component::draw(Shader *shader) {
@@ -68,5 +66,21 @@ namespace GUI {
 
             glDrawArrays(GL_LINES, 0, 2 * 4);
         }
+    }
+
+    void Component::setPosition(const Vector2f& position) {
+        this->position = position;
+    }
+
+    Vector2f Component::getPosition() const {
+        return this->position;
+    }
+
+    void Component::setSize(const Vector2f& size) {
+        this->size = size;
+    }
+
+    Vector2f Component::getSize() const {
+        return this->size;
     }
 }

@@ -22,6 +22,7 @@
 #include "GUI/Font.h"
 #include "GUI/Button.h"
 #include "Mouse/Mouse.h"
+#include "Utility/Vector2f.h"
 
 class Entry {
 public:

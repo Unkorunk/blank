@@ -54,10 +54,13 @@ namespace GUI {
         Component::setX(x);
         this->refresh();
     }
-
     void Button::setY(float y)
     {
         Component::setY(y);
+        this->refresh();
+    }
+    void Button::setPosition(const Vector2f& position) {
+        Component::setPosition(position);
         this->refresh();
     }
 
@@ -66,10 +69,13 @@ namespace GUI {
         Component::setWidth(width);
         this->refresh();
     }
-
     void Button::setHeight(float height)
     {
         Component::setHeight(height);
+        this->refresh();
+    }
+    void Button::setSize(const Vector2f& size) {
+        Component::setSize(size);
         this->refresh();
     }
 

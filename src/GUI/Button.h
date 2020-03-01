@@ -33,8 +33,10 @@ namespace GUI {
 
         void setX(float x) override;
         void setY(float y) override;
+        void setPosition(const Vector2f& position) override;
         void setWidth(float width) override;
         void setHeight(float height) override;
+        void setSize(const Vector2f& size) override;
 
     private:
         float radius[4] = {0.05f, 0.05f, 0.05f, 0.05f};

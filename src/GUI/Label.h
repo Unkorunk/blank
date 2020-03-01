@@ -37,6 +37,7 @@ namespace GUI {
 
         void setWidth(float width) override;
         void setHeight(float height) override;
+        void setSize(const Vector2f& size) override;
 
     private:
         Texture texture;

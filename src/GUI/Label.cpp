@@ -106,11 +106,15 @@ namespace GUI {
 
     void Label::setWidth(float width) {
         Component::setWidth(width);
-        this->height = static_cast<float>(texture.getRows()) * this->getWidth() / static_cast<float>(texture.getCols());
+        this->size.setY(static_cast<float>(texture.getRows()) * this->getWidth() / static_cast<float>(texture.getCols()));
     }
 
     void Label::setHeight(float height) {
         Component::setHeight(height);
-        this->width = static_cast<float>(texture.getCols()) * this->getHeight() / static_cast<float>(texture.getRows());
+        this->size.setX(static_cast<float>(texture.getCols()) * this->getHeight() / static_cast<float>(texture.getRows()));
+    }
+
+    void Label::setSize(const Vector2f& size) {
+        Component::setWidth(size.getX());
     }
 }
