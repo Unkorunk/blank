@@ -25,8 +25,8 @@ add_library(blank_core
         src/Mouse/Mouse.cpp src/Mouse/Mouse.h
         src/GUI/IInputMouse.cpp src/GUI/IInputMouse.h)
 
-add_executable(blank_game src/Game/Game.cpp)
-add_executable(blank_engine src/Engine/Engine.cpp)
+add_executable(blank_game src/main.cpp)
+add_executable(blank_engine src/main.cpp)
 
 if (MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W3 /WX")

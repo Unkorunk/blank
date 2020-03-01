@@ -21,7 +21,6 @@
 
 #include "GUI/Font.h"
 #include "GUI/Button.h"
-#include "GUI/Label.h"
 #include "Mouse/Mouse.h"
 
 class Entry {
@@ -43,7 +42,6 @@ private:
     std::unique_ptr<GUI::Font> roboto_font;
 
     GUI::Button test_button;
-    GUI::Label test_label;
 
     std::chrono::system_clock::time_point time_prev_frame;
 

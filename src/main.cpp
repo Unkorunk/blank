@@ -1,5 +1,5 @@
 //
-// Created by unkorunk on 13.02.2020.
+// Created by unkorunk on 01.03.2020.
 //
 
 #include <iostream>
@@ -8,7 +8,7 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include "../Entry.h"
+#include "Entry.h"
 
 int main() {
     GLFWwindow *window;
@@ -27,7 +27,11 @@ int main() {
         return 1;
     }
 
-    window = glfwCreateWindow(640, 480, "blank engine", nullptr, nullptr);
+    window = glfwCreateWindow(Settings::getInstance().get<int>("width"),
+                              Settings::getInstance().get<int>("height"),
+                              Settings::getInstance().get<std::string>("title").c_str(),
+                              Settings::getInstance().get<bool>("fullscreen") ? glfwGetPrimaryMonitor() : nullptr,
+                              nullptr);
     if (!window) {
         std::cerr << "[GLFW] failed create window" << std::endl;
         glfwTerminate();
@@ -55,12 +59,12 @@ int main() {
     }
 
     while (!glfwWindowShouldClose(window)) {
-        int mask = GL_COLOR_BUFFER_BIT;
+        GLint mask = GL_COLOR_BUFFER_BIT;
         if (Settings::getInstance().get<std::string>("project_type") == "3d") {
             mask |= GL_DEPTH_BUFFER_BIT;
         }
         glClear(mask);
-        
+
         try {
             Entry::getInstance().update();
         } catch (std::exception &ex) {

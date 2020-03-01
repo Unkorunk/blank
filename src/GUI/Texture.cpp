@@ -32,8 +32,6 @@ namespace GUI {
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture_id);
-        shader->set("use_texture", 1);
-        shader->set("m_sampler", 0);
 
         std::array<GLfloat, 6 * 3> vertices = {
                 this->getX(), this->getY(), 0.0f,
@@ -54,6 +52,8 @@ namespace GUI {
                 1.0f, 0.0f
         };
 
+        shader->set("use_texture", 1);
+        shader->set("m_sampler", 0);
         shader->set(0, vertices.size() * sizeof(GLfloat), 3, vertices.data());
         shader->set(1, uvs.size() * sizeof(GLfloat), 2, uvs.data());
 

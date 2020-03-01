@@ -56,10 +56,9 @@ void Entry::start() {
         glfwSetWindowShouldClose(this->window, GLFW_TRUE);
     });
 
-    test_label.setFont(roboto_font.get());
-    test_label.setText("Exit");
+    test_button.setFont(roboto_font.get());
+    test_button.setText("Exit");
 
-    test_button.addChild(&test_label);
     // ~example
 
     time_prev_frame = std::chrono::system_clock::now();
