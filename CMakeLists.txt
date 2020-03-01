@@ -23,7 +23,8 @@ add_library(blank_core
         src/GUI/ITreeStructure.cpp src/GUI/ITreeStructure.h
         src/Mouse/MouseEvent.h
         src/Mouse/Mouse.cpp src/Mouse/Mouse.h
-        src/GUI/IInputMouse.cpp src/GUI/IInputMouse.h)
+        src/GUI/IInputMouse.cpp src/GUI/IInputMouse.h
+        src/Utility/Vector2f.cpp src/Utility/Vector2f.h)
 
 add_executable(blank_game src/main.cpp)
 add_executable(blank_engine src/main.cpp)
