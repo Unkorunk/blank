@@ -44,22 +44,10 @@ void Entry::start() {
         Mouse::getInstance().mouseMoveCallback(window, xpos, ypos);
     });
 
-    // example
-    roboto_font = std::unique_ptr<GUI::Font>(GUI::Font::loadFont("./assets/fonts/some_font.ttf"));
-    roboto_font->setPixelSizes(0, 32);
-
-    test_button.setX(-0.5f / 2.0f);
-    test_button.setY(0.15f / 2.0f);
-    test_button.setWidth(1.0f / 2.0f);
-    test_button.setHeight(0.3f / 2.0f);
-    test_button.setMouseCallback(MouseEvent::MOUSE_UP, [this](const Vector2f& position) {
-        glfwSetWindowShouldClose(this->window, GLFW_TRUE);
-    });
-
-    test_button.setFont(roboto_font.get());
-    test_button.setText("Exit");
-
-    // ~example
+    IScene* scene = SceneManager::getInstance().getScene();
+    if (scene != nullptr) {
+        scene->start();
+    }
 
     time_prev_frame = std::chrono::system_clock::now();
 }
@@ -71,31 +59,10 @@ void Entry::update() {
     time_prev_frame = time_now_frame;
     float delta_time = delta_time_ms / 1000.0f;
 
-    // example
-    Shader &shader = shaders.at("default");
-    shader.activate();
-
-    test_button.draw(&shader);
-
-    int window_width, window_height;
-    glfwGetWindowSize(window, &window_width, &window_height);
-    Vector2f mouse_position = Mouse::getInstance().getMousePosition();
-    float mouse_x = 2.0f * mouse_position.getX() / window_width - 1.0f,
-            mouse_y = -2.0f * mouse_position.getY() / window_height + 1.0f;
-
-    bool mouse_on_button = (mouse_x > test_button.getX() ||
-                            abs(mouse_x - test_button.getX()) < std::numeric_limits<float>::epsilon()) &&
-                           (mouse_y < test_button.getY() ||
-                            abs(mouse_y - test_button.getY()) < std::numeric_limits<float>::epsilon()) &&
-                           mouse_x < test_button.getX() + test_button.getWidth() &&
-                           mouse_y > test_button.getY() - test_button.getHeight();
-
-    if (mouse_on_button) {
-        test_button.mouseEvent(Mouse::getInstance().getMouseEvent(), Vector2f(mouse_x, mouse_y));
+    IScene* scene = SceneManager::getInstance().getScene();
+    if (scene != nullptr) {
+        scene->update();
     }
-
-    shader.deactivate();
-    // ~example
 
     Mouse::getInstance().update();
 }

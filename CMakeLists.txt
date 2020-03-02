@@ -24,7 +24,9 @@ add_library(blank_core
         src/Mouse/MouseEvent.h
         src/Mouse/Mouse.cpp src/Mouse/Mouse.h
         src/GUI/IInputMouse.cpp src/GUI/IInputMouse.h
-        src/Utility/Vector2f.cpp src/Utility/Vector2f.h)
+        src/Utility/Vector2f.cpp src/Utility/Vector2f.h
+        src/Scene/SceneManager.cpp src/Scene/SceneManager.h
+        src/Scene/IScene.h)
 
 add_executable(blank_game src/main.cpp)
 add_executable(blank_engine src/main.cpp)

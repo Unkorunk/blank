@@ -24,6 +24,9 @@
 #include "Mouse/Mouse.h"
 #include "Utility/Vector2f.h"
 
+#include "Scene/IScene.h"
+#include "Scene/SceneManager.h"
+
 class Entry {
 public:
     static Entry &getInstance();
@@ -39,10 +42,6 @@ private:
     ~Entry();
 
     GLFWwindow* window;
-
-    std::unique_ptr<GUI::Font> roboto_font;
-
-    GUI::Button test_button;
 
     std::chrono::system_clock::time_point time_prev_frame;
 
