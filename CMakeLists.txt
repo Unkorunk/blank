@@ -20,7 +20,7 @@ add_library(blank_core
         src/GUI/Font.cpp src/GUI/Font.h
         src/GUI/Texture.cpp src/GUI/Texture.h
         src/GUI/Color.cpp src/GUI/Color.h
-        src/GUI/ITreeStructure.cpp src/GUI/ITreeStructure.h
+        src/ITreeStructure.h
         src/Mouse/MouseEvent.h
         src/Mouse/Mouse.cpp src/Mouse/Mouse.h
         src/GUI/IInputMouse.cpp src/GUI/IInputMouse.h
