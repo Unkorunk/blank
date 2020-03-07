@@ -2,8 +2,7 @@
 // Created by unkorunk on 13.02.2020.
 //
 
-#ifndef BLANK_GAME_BUTTON_H
-#define BLANK_GAME_BUTTON_H
+#pragma once
 
 #include <array>
 #include <algorithm>
@@ -14,15 +13,15 @@
 #include <GL/glew.h>
 #include <glm/vec3.hpp>
 
-#include "../Mouse/MouseEvent.h"
-#include "Component.h"
+#include "UIComponent.h"
 #include "Label.h"
-#include "IInputMouse.h"
+#include "Mouse/MouseEvent.h"
+#include "Component/InputMouse.h"
 
 namespace GUI {
-    class Button : public Component, public IInputMouse {
+    class Button : public UIComponent {
     public:
-        Button() = default;
+        Button();
         void draw(Shader* shader) override;
 
         void setFont(Font* font);
@@ -31,17 +30,22 @@ namespace GUI {
         void setText(const std::string& text);
         std::string getText() const;
 
-        void setX(float x) override;
-        void setY(float y) override;
-        void setPosition(const Vector2f& position) override;
-        void setWidth(float width) override;
-        void setHeight(float height) override;
-        void setSize(const Vector2f& size) override;
+        void setX(float x);
+        void setY(float y);
+        void setPosition(const Vector2f& position);
+        void setWidth(float width);
+        void setHeight(float height);
+        void setSize(const Vector2f& size);
+
+        MouseEvent getMouseEvent() const;
+        void setMouseCallback(MouseEvent mouse_event, std::function<void(const Vector2f&)> callback);
 
     private:
         float radius[4] = {0.05f, 0.05f, 0.05f, 0.05f};
         std::vector<glm::vec2> quadraticCurve(glm::vec2 start, glm::vec2 control, glm::vec2 end);
-        
+
+        std::unique_ptr<Component::InputMouse> input_mouse;
+
         size_t vertices_count = 0;
         std::vector<GLfloat> vertices;
         std::vector<GLfloat> colors;
@@ -53,5 +57,3 @@ namespace GUI {
 
     };
 }
-
-#endif //BLANK_GAME_BUTTON_H

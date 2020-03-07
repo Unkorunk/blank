@@ -2,19 +2,22 @@
 // Created by unkorunk on 22.02.2020.
 //
 
-#ifndef BLANK_GAME_IINPUTMOUSE_H
-#define BLANK_GAME_IINPUTMOUSE_H
+#pragma once
 
 #include <functional>
 #include <map>
 
-#include "../Mouse/MouseEvent.h"
-#include "../Utility/Vector2f.h"
+#include "IComponent.h"
+#include "Transform.h"
+#include "Mouse/MouseManager.h"
 
-namespace GUI {
-    class IInputMouse {
+namespace Component {
+    class InputMouse : public IComponent {
     public:
-        virtual ~IInputMouse() = default;
+        InputMouse();
+        virtual ~InputMouse() = default;
+
+        void update() override;
 
         void mouseEvent(MouseEvent mouse_event, const Vector2f& position);
         void setMouseCallback(MouseEvent mouse_event, std::function<void(const Vector2f&)> callback);
@@ -24,10 +27,5 @@ namespace GUI {
         std::map<MouseEvent, std::function<void(const Vector2f&)>> callbacks;
         MouseEvent mouse_event;
 
-    protected:
-        IInputMouse();
-
     };
 }
-
-#endif //BLANK_GAME_IINPUTMOUSE_H

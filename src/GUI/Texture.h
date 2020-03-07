@@ -2,8 +2,7 @@
 // Created by unkorunk on 20.02.2020.
 //
 
-#ifndef BLANK_GAME_TEXTURE_H
-#define BLANK_GAME_TEXTURE_H
+#pragma once
 
 #include <algorithm>
 #include <cstdint>
@@ -12,11 +11,11 @@
 #include <stdexcept>
 #include <array>
 
-#include "Component.h"
+#include "UIComponent.h"
 #include "Color.h"
 
 namespace GUI {
-    class Texture : public Component {
+    class Texture : public UIComponent {
     public:
         Texture();
         Texture(GLsizei cols, GLsizei rows);
@@ -27,8 +26,8 @@ namespace GUI {
         GLsizei getCols() const;
         GLsizei getRows() const;
 
-        void setPixel(size_t x, size_t y, Color color);
-        Color getPixel(size_t x, size_t y) const;
+        void setPixel(GLsizei x, GLsizei y, Color color);
+        Color getPixel(GLsizei x, GLsizei y) const;
 
         virtual ~Texture();
 
@@ -39,9 +38,6 @@ namespace GUI {
         GLuint texture_id;
 
         std::unique_ptr<uint8_t[]> buffer;
-        GLsizei cols, rows;
+        GLsizei rows, cols;
     };
 }
-
-
-#endif //BLANK_GAME_TEXTURE_H

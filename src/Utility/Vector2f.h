@@ -2,8 +2,7 @@
 // Created by unkorunk on 01.03.2020.
 //
 
-#ifndef BLANK_GAME_VECTOR2F_H
-#define BLANK_GAME_VECTOR2F_H
+#pragma once
 
 #include <cmath>
 #include <glm/vec2.hpp>
@@ -55,5 +54,3 @@ private:
     float x, y;
 
 };
-
-#endif //BLANK_GAME_VECTOR2F_H

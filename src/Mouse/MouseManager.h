@@ -2,39 +2,35 @@
 // Created by unkorunk on 22.02.2020.
 //
 
-#ifndef BLANK_GAME_MOUSE_H
-#define BLANK_GAME_MOUSE_H
+#pragma once
 
 #include <utility>
 #include <stdexcept>
 
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include "IManager.h"
 #include "MouseEvent.h"
-#include "../Utility/Vector2f.h"
+#include "Utility/Vector2f.h"
 
-class Mouse {
-    friend class Entry;
+class MouseManager : public IManager {
 public:
-    static Mouse &getInstance();
+    explicit MouseManager(Blank *blank);
+    virtual ~MouseManager() = default;
+
+    void start() override;
+    void update() override;
 
     MouseEvent getMouseEvent() const;
     Vector2f getMousePosition() const;
-
-private:
-    Mouse();
-    virtual ~Mouse() = default;
 
     void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
     void mouseEnterCallback(GLFWwindow* window, int entered);
     void mouseMoveCallback(GLFWwindow* window, double xpos, double ypos);
 
-    void update();
-
+private:
     MouseEvent mouse_event;
     double mouse_position_x, mouse_position_y;
 
 };
-
-
-#endif //BLANK_GAME_MOUSE_H

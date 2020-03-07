@@ -2,8 +2,7 @@
 // Created by unkorunk on 20.02.2020.
 //
 
-#ifndef BLANK_GAME_COLOR_H
-#define BLANK_GAME_COLOR_H
+#pragma once
 
 #include <cstdint>
 
@@ -21,5 +20,3 @@ namespace GUI {
     private:
     };
 }
-
-#endif //BLANK_GAME_COLOR_H

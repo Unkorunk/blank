@@ -2,24 +2,30 @@
 // Created by unkorunk on 20.02.2020.
 //
 
-#ifndef BLANK_GAME_ITREESTRUCTURE_H
-#define BLANK_GAME_ITREESTRUCTURE_H
+#pragma once
 
+#include <vector>
 #include <set>
 
 template <typename BaseClass>
 class ITreeStructure {
 public:
+    ITreeStructure() = default;
+
     virtual ~ITreeStructure() = default;
 
     void addChild(BaseClass* child) {
-        children.insert(child);
+        if (addChildCallback(child)) {
+            children.insert(child);
+        }
     }
 
     void removeChild(BaseClass* child) {
         auto iter = children.find(child);
         if (iter != children.end()) {
-            children.erase(iter);
+            if (removeChildCallback(child)) {
+                children.erase(iter);
+            }
         }
     }
 
@@ -36,7 +42,7 @@ public:
     }
 
     template <typename T>
-    T *getChild() {
+    T *getChild() const {
         for (BaseClass *child : children) {
             T *obj = dynamic_cast<T *>(child);
             if (obj != nullptr) {
@@ -46,12 +52,16 @@ public:
         return nullptr;
     }
 
+    std::vector<BaseClass *> getChildren() {
+        return std::vector<BaseClass *>(children.begin(), children.end());
+    }
+
 private:
-    template <>
+    template <typename... Args>
     void addChildren(BaseClass* child) {
         this->addChild(child);
     }
-    template <>
+    template <typename... Args>
     void removeChildren(BaseClass* child) {
         this->removeChild(child);
     }
@@ -59,9 +69,8 @@ private:
     std::set<BaseClass *> children;
 
 protected:
-    ITreeStructure() = default;
+
+    virtual bool addChildCallback(BaseClass* child) { return true; }
+    virtual bool removeChildCallback(BaseClass* child) { return true; }
 
 };
-
-
-#endif //BLANK_GAME_ITREESTRUCTURE_H

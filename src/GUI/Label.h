@@ -2,8 +2,7 @@
 // Created by unkorunk on 17.02.2020.
 //
 
-#ifndef BLANK_GAME_LABEL_H
-#define BLANK_GAME_LABEL_H
+#pragma once
 
 #include <exception>
 #include <iostream>
@@ -14,12 +13,12 @@
 
 #include <freetype/ftbitmap.h>
 
-#include "Component.h"
+#include "UIComponent.h"
 #include "Font.h"
 #include "Texture.h"
 
 namespace GUI {
-    class Label : public Component {
+    class Label : public UIComponent {
     public:
         Label();
 
@@ -35,9 +34,9 @@ namespace GUI {
 
         std::string getText() const;
 
-        void setWidth(float width) override;
-        void setHeight(float height) override;
-        void setSize(const Vector2f& size) override;
+        void setWidth(float width);
+        void setHeight(float height);
+        void setSize(const Vector2f& size);
 
     private:
         Texture texture;
@@ -46,5 +45,3 @@ namespace GUI {
         Font *font;
     };
 }
-
-#endif //BLANK_GAME_LABEL_H

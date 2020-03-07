@@ -2,29 +2,39 @@
 // Created by unkorunk on 02.03.2020.
 //
 
-#ifndef BLANK_GAME_SCENEMANAGER_H
-#define BLANK_GAME_SCENEMANAGER_H
+#pragma once
 
 #include <memory>
 
 #include "IScene.h"
+#include "IManager.h"
 
-class SceneManager {
+class SceneManager : public IManager {
 public:
-    static SceneManager& getInstance();
+    explicit SceneManager(Blank* blank);
+    virtual ~SceneManager() = default;
 
     template <typename T, typename... Args>
-    void createScene(Args&&... args) {
-        selectedScene = std::unique_ptr<IScene>(new T(std::forward<Args>(args)...));
+    void create(Args... args) {
+        if (query_scene != nullptr) {
+            delete query_scene;
+        }
+        this->query_scene = new T(std::forward<Args>(args)...);
+        this->query_scene->blank = this->getBlank();
+        this->query_scene->setShader(this->getBlank()->getManager<ResourceManager>()->getDefaultShader());
+        if (!selected_scene) {
+            this->logic_change_scene();
+        }
     }
 
     IScene *getScene() const;
 
+    void update() override;
+
 private:
-    SceneManager() = default;
+    void logic_change_scene();
 
-    std::unique_ptr<IScene> selectedScene;
+    std::unique_ptr<IScene> selected_scene;
+    IScene* query_scene = nullptr;
+
 };
-
-
-#endif //BLANK_GAME_SCENEMANAGER_H

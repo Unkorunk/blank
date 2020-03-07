@@ -2,8 +2,7 @@
 // Created by unkorunk on 22.02.2020.
 //
 
-#ifndef BLANK_GAME_MOUSEEVENT_H
-#define BLANK_GAME_MOUSEEVENT_H
+#pragma once
 
 enum class MouseEvent {
     MOUSE_DOWN,
@@ -15,5 +14,3 @@ enum class MouseEvent {
     MOUSE_NOT_CONTAINS,
     MOUSE_MOVE
 };
-
-#endif //BLANK_GAME_MOUSEEVENT_H

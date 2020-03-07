@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.2)
-project(blank_engine)
-project(blank_game)
+
+project(blank)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -10,41 +10,43 @@ add_subdirectory(submodules/glfw)
 add_subdirectory(submodules/glew/build/cmake)
 add_subdirectory(submodules/freetype2)
 
-add_library(blank_core
-        src/Entry.cpp src/Entry.h
+add_library(blank
+        src/Blank.h src/Blank.cpp
         src/Shader.cpp src/Shader.h
         src/Settings.cpp src/Settings.h
-        src/GUI/Component.cpp src/GUI/Component.h
+        src/ITreeStructure.h
+        src/ResourceManager.h
+        src/GUI/UIComponent.cpp src/GUI/UIComponent.h
         src/GUI/Button.cpp src/GUI/Button.h
         src/GUI/Label.cpp src/GUI/Label.h
         src/GUI/Font.cpp src/GUI/Font.h
         src/GUI/Texture.cpp src/GUI/Texture.h
         src/GUI/Color.cpp src/GUI/Color.h
-        src/ITreeStructure.h
         src/Mouse/MouseEvent.h
-        src/Mouse/Mouse.cpp src/Mouse/Mouse.h
-        src/GUI/IInputMouse.cpp src/GUI/IInputMouse.h
+        src/Mouse/MouseManager.cpp src/Mouse/MouseManager.h
         src/Utility/Vector2f.cpp src/Utility/Vector2f.h
         src/Scene/SceneManager.cpp src/Scene/SceneManager.h
-        src/Scene/IScene.h)
-
-add_executable(blank_game src/main.cpp)
-add_executable(blank_engine src/main.cpp)
+        src/Scene/IScene.h
+        src/GameObject/GameObject.cpp src/GameObject/GameObject.h
+        src/Component/IComponent.h
+        src/Component/Transform.cpp src/Component/Transform.h
+        src/Component/InputMouse.cpp src/Component/InputMouse.h src/IManager.h)
+target_include_directories(blank PUBLIC src)
 
 if (MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W3 /WX")
 else()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -Werror")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-unused-parameter -Wextra -pedantic -Werror")
 endif()
 
 find_package(OpenGL REQUIRED)
 
-target_include_directories(blank_core PUBLIC ${PROJECT_SOURCE_DIR}/submodules/glew/include)
-target_link_libraries(blank_core freetype glew_s glfw OpenGL::GL nlohmann_json::nlohmann_json glm::glm)
-
-target_link_libraries(blank_engine blank_core)
-target_link_libraries(blank_game blank_core)
+target_include_directories(blank PUBLIC ${PROJECT_SOURCE_DIR}/submodules/glew/include)
+target_link_libraries(blank freetype glew_s glfw OpenGL::GL nlohmann_json::nlohmann_json glm::glm)
 
 configure_file(settings.json settings.json COPYONLY)
 file(COPY shaders DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 file(COPY assets DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
+add_executable(example example/main.cpp)
+target_link_libraries(example PUBLIC blank)

@@ -2,8 +2,7 @@
 // Created by unkorunk on 27.01.2020.
 //
 
-#ifndef BLANK_SHADER_H
-#define BLANK_SHADER_H
+#pragma once
 
 #include <iostream>
 #include <string>
@@ -57,5 +56,3 @@ private:
     std::map<std::string, GLint> uniform_locations;
 
 };
-
-#endif //BLANK_SHADER_H

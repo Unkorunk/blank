@@ -2,8 +2,7 @@
 // Created by unkorunk on 17.02.2020.
 //
 
-#ifndef BLANK_GAME_FONT_H
-#define BLANK_GAME_FONT_H
+#pragma once
 
 #include <string>
 #include <iostream>
@@ -30,5 +29,3 @@ namespace GUI {
         FT_Face face;
     };
 }
-
-#endif //BLANK_GAME_FONT_H

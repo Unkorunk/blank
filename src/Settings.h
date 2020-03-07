@@ -2,8 +2,7 @@
 // Created by unkorunk on 13.02.2020.
 //
 
-#ifndef BLANK_GAME_SETTINGS_H
-#define BLANK_GAME_SETTINGS_H
+#pragma once
 
 #include <fstream>
 #include <exception>
@@ -30,6 +29,3 @@ private:
     Settings();
     json settings_json;
 };
-
-
-#endif //BLANK_GAME_SETTINGS_H

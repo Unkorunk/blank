@@ -10,16 +10,17 @@ namespace GUI {
     Label::~Label() = default;
 
     void Label::draw(Shader* shader) {
-        Component::draw(shader);
+        UIComponent::draw(shader);
 
         if (font == nullptr || text.empty()) {
             return;
         }
 
-        texture.setX(this->getX());
-        texture.setY(this->getY());
-        texture.setWidth(this->getWidth());
-        texture.setHeight(this->getHeight());
+        Component::Transform *texture_transform = texture.getComponent<Component::Transform>();
+        texture_transform->setX(transform->getX());
+        texture_transform->setY(transform->getY());
+        texture_transform->setWidth(transform->getWidth());
+        texture_transform->setHeight(transform->getHeight());
 
         texture.draw(shader);
     }
@@ -37,9 +38,6 @@ namespace GUI {
             texture_height = std::max(texture_height, glyph->bitmap.rows);
             max_bitmap_top = std::max(max_bitmap_top, glyph->bitmap_top);
         }
-
-        Component::setWidth(1.0f);
-        Component::setHeight(static_cast<float>(texture_height) / static_cast<float>(texture_width));
 
         std::unique_ptr<unsigned char[]> buffer(new unsigned char[4 * texture_height * texture_width]());
 
@@ -64,8 +62,6 @@ namespace GUI {
                 throw std::runtime_error("Glyph have next glyph");
             } else if (bitmap.pitch < 0) {
                 throw std::runtime_error("Pitch is negative");
-            } else if (bitmap.width != bitmap.pitch) {
-                throw std::runtime_error("Alignment not equal 1");
             }
 
             for (unsigned int y = 0; y < bitmap.rows; y++) {
@@ -90,6 +86,8 @@ namespace GUI {
         }
 
         texture.setData(texture_width, texture_height, buffer.get());
+
+        this->setHeight(transform->getHeight());
     }
 
     std::string Label::getText() const {
@@ -105,16 +103,16 @@ namespace GUI {
     }
 
     void Label::setWidth(float width) {
-        Component::setWidth(width);
-        this->size.setY(static_cast<float>(texture.getRows()) * this->getWidth() / static_cast<float>(texture.getCols()));
+        transform->setWidth(width);
+        transform->setHeight(static_cast<float>(texture.getRows()) * transform->getWidth() / static_cast<float>(texture.getCols()));
     }
 
     void Label::setHeight(float height) {
-        Component::setHeight(height);
-        this->size.setX(static_cast<float>(texture.getCols()) * this->getHeight() / static_cast<float>(texture.getRows()));
+        transform->setHeight(height);
+        transform->setWidth(static_cast<float>(texture.getCols()) * transform->getHeight() / static_cast<float>(texture.getRows()));
     }
 
     void Label::setSize(const Vector2f& size) {
-        Component::setWidth(size.getX());
+        transform->setWidth(size.getX());
     }
 }

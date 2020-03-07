@@ -7,5 +7,6 @@
   "shaders": [
     "default"
   ],
+  "default_shader" : "default",
   "debug": false
 }

@@ -69,7 +69,7 @@ bool Vector2f::operator!=(const Vector2f &other) const {
 }
 
 float Vector2f::length() const {
-    return std::sqrtf(std::fmaf(this->x, this->x, this->y * this->y));
+    return sqrtf(std::fmaf(this->x, this->x, this->y * this->y));
 }
 
 void Vector2f::normalize() {
@@ -106,7 +106,7 @@ float Vector2f::dot(const Vector2f &lhs, const Vector2f &rhs) {
 }
 
 float Vector2f::angle(const Vector2f &lhs, const Vector2f &rhs) {
-    return std::acosf(dot(lhs, rhs) / (lhs.length() * rhs.length()));
+    return acosf(dot(lhs, rhs) / (lhs.length() * rhs.length()));
 }
 
 bool Vector2f::equals(const Vector2f &lhs, const Vector2f &rhs, float epsilon) {

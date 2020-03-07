@@ -5,42 +5,42 @@
 #include "Texture.h"
 
 namespace GUI {
-    Texture::Texture() : cols(), rows(), buffer(), texture_id() {
+    Texture::Texture() : texture_id(), buffer(), rows(), cols() {
         glGenTextures(1, &this->texture_id);
     }
 
     Texture::Texture(GLsizei cols, GLsizei rows)
-            : cols(cols), rows(rows), buffer(new uint8_t[4 * cols * rows]()), texture_id() {
+            : texture_id(), buffer(new uint8_t[4 * cols * rows]()), rows(rows), cols(cols) {
         glGenTextures(1, &this->texture_id);
         this->refresh();
     }
 
-    GUI::Texture::Texture(GLsizei cols, GLsizei rows, const uint8_t *buffer)
-            : cols(cols), rows(rows), buffer(new uint8_t[4 * cols * rows]), texture_id() {
+    Texture::Texture(GLsizei cols, GLsizei rows, const uint8_t *buffer)
+            : texture_id(), buffer(new uint8_t[4 * cols * rows]), rows(rows), cols(cols) {
         std::copy(buffer, buffer + 4 * cols * rows, this->buffer.get());
         glGenTextures(1, &this->texture_id);
         this->refresh();
     }
 
-    GUI::Texture::~Texture() {
+    Texture::~Texture() {
         glDeleteTextures(1, &texture_id);
     }
 
-    void GUI::Texture::draw(Shader *shader) {
+    void Texture::draw(Shader *shader) {
         if (!buffer) return;
-        Component::draw(shader);
+        UIComponent::draw(shader);
 
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture_id);
 
         std::array<GLfloat, 6 * 3> vertices = {
-                this->getX(), this->getY(), 0.0f,
-                this->getX(), this->getY() - this->getHeight(), 0.0f,
-                this->getX() + this->getWidth(), this->getY(), 0.0f,
+                transform->getX(), transform->getY(), 0.0f,
+                transform->getX(), transform->getY() - transform->getHeight(), 0.0f,
+                transform->getX() + transform->getWidth(), transform->getY(), 0.0f,
 
-                this->getX() + this->getWidth(), this->getY(), 0.0f,
-                this->getX(), this->getY() - this->getHeight(), 0.0f,
-                this->getX() + this->getWidth(), this->getY() - this->getHeight(), 0.0f
+                transform->getX() + transform->getWidth(), transform->getY(), 0.0f,
+                transform->getX(), transform->getY() - transform->getHeight(), 0.0f,
+                transform->getX() + transform->getWidth(), transform->getY() - transform->getHeight(), 0.0f
         };
 
         std::array<GLfloat, 6 * 2> uvs = {
@@ -60,7 +60,7 @@ namespace GUI {
         glDrawArrays(GL_TRIANGLES, 0, 3 * 2);
     }
 
-    void Texture::setPixel(size_t x, size_t y, Color color) {
+    void Texture::setPixel(GLsizei x, GLsizei y, Color color) {
         if (x >= this->cols || y >= this->rows) {
             throw std::out_of_range("Out of range");
         }
@@ -73,7 +73,7 @@ namespace GUI {
         this->refresh();
     }
 
-    Color Texture::getPixel(size_t x, size_t y) const {
+    Color Texture::getPixel(GLsizei x, GLsizei y) const {
         if (x >= this->cols || y >= this->rows) {
             throw std::out_of_range("Out of range");
         }

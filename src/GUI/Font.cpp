@@ -5,17 +5,17 @@
 #include "Font.h"
 
 namespace GUI {
-
     Font *Font::loadFont(const std::string &filename) {
-
-
         Font* font = new Font();
+        
         FT_Error error = FT_New_Face(getLibrary(), filename.c_str(), 0, &font->face);
         if (error == FT_Err_Unknown_File_Format) {
             throw std::runtime_error("Unknown font file format");
         } else if (error) {
             throw std::runtime_error("Failed create new face");
         }
+
+        font->setPixelSizes(0, 16);
 
         return font;
     }
