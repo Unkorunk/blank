@@ -140,35 +140,6 @@ public:
     void update(float delta_time) override {
         FPSScene::update(delta_time);
 
-        switch (button_start->getMouseEvent())
-        {
-        case MouseEvent::MOUSE_DOWN:
-            std::cout << "DOWN" << std::endl;
-            break;
-        case MouseEvent::MOUSE_PRESS:
-            std::cout << "PRESS" << std::endl;
-            break;
-        case MouseEvent::MOUSE_UP:
-            std::cout << "UP" << std::endl;
-            break;
-        case MouseEvent::MOUSE_ENTER:
-            std::cout << "ENTER" << std::endl;
-            break;
-        case MouseEvent::MOUSE_CONTAINS:
-            std::cout << "CONTAINS" << std::endl;
-            break;
-        case MouseEvent::MOUSE_LEAVE:
-            std::cout << "LEAVE" << std::endl;
-            break;
-        case MouseEvent::MOUSE_NOT_CONTAINS:
-            std::cout << "NOT_CONTAINS" << std::endl;
-            break;
-        case MouseEvent::MOUSE_MOVE:
-            std::cout << "MOVE" << std::endl;
-            break;
-        default:
-            break;
-        }
     }
 
 private:

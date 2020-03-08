@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <iostream>
+
 enum class MouseEvent {
     MOUSE_DOWN,
     MOUSE_PRESS,
@@ -12,5 +14,6 @@ enum class MouseEvent {
     MOUSE_CONTAINS,
     MOUSE_LEAVE,
     MOUSE_NOT_CONTAINS,
-    MOUSE_MOVE
+    MOUSE_MOVE,
+    MOUSE_UNDEFINED_BEHAVIOUR
 };

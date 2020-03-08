@@ -17,6 +17,7 @@ namespace Component {
         InputMouse();
         virtual ~InputMouse() = default;
 
+        void start() override;
         void update() override;
 
         void mouseEvent(MouseEvent mouse_event, const Vector2f& position);
@@ -26,6 +27,7 @@ namespace Component {
     private:
         std::map<MouseEvent, std::function<void(const Vector2f&)>> callbacks;
         MouseEvent mouse_event;
+        Vector2f prev_mouse_position;
 
     };
 }
