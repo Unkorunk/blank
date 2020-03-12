@@ -3,8 +3,7 @@
 //
 
 #include "UIComponent.h"
-// TODO: remove that line?
-#include "Blank.cpp"
+#include "Blank.h"
 
 namespace GUI {
     UIComponent::UIComponent() : transform(new Component::Transform()) {
