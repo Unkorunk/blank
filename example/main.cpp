@@ -23,7 +23,7 @@ public:
         this->fps_label = std::make_unique<GUI::Label>();
 
         Component::Transform* fps_label_transform = fps_label->getComponent<Component::Transform>();
-        fps_label_transform->setPosition(Vector2f(-1.0f, 1.0f));
+        fps_label_transform->setPosition(Vector3f(-1.0f, 1.0f, 0.0f));
         this->fps_label->setHeight(0.08f);
         this->fps_label->setFont(roboto_font.get());
 
@@ -73,7 +73,7 @@ public:
         texture_player.setData(texture_width, texture_height, pixels.get());
 
         transform_player = texture_player.getComponent<Component::Transform>();
-        transform_player->setSize(0.1f, 0.1f);
+        transform_player->setSize(0.1f, 0.1f, 1.0f);
 
         this->addChild(&texture_player);
 
@@ -83,7 +83,7 @@ public:
     void update(float delta_time) override {
         FPSScene::update(delta_time);
 
-        transform_player->setPosition(position_player - Vector2f(transform_player->getWidth() / 2.0f, -transform_player->getHeight() / 2.0f));
+        transform_player->setPosition(Vector3f(position_player - Vector2f(transform_player->getWidth() / 2.0f, -transform_player->getHeight() / 2.0f)));
 
         // TODO: FIX: sometimes no MOUSE_DOWN event
         if (this->mouse->getMouseEvent() == MouseEvent::MOUSE_DOWN || this->mouse->getMouseEvent() == MouseEvent::MOUSE_PRESS) {
@@ -95,7 +95,7 @@ public:
             target_position.setY(-2.0f * target_position.getY() / window_height + 1.0f);
         }
 
-        if (Vector2f::distance(target_position, position_player) > 1e-2) {
+        if (Vector2f::distanceSqr(target_position, position_player) > 1e-4) {
             Vector2f dir = (target_position - position_player).normalized();
             
             position_player = position_player + speed_player * dir * delta_time;

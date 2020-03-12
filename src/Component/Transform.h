@@ -5,7 +5,7 @@
 #pragma once
 
 #include "IComponent.h"
-#include "Utility/Vector2f.h"
+#include "Utility/Vector3f.h"
 
 namespace Component {
     class Transform : public IComponent {
@@ -16,9 +16,12 @@ namespace Component {
         void setY(float y);
         float getY() const;
 
-        void setPosition(const Vector2f& position);
-        void setPosition(float x, float y);
-        Vector2f getPosition() const;
+        void setZ(float z);
+        float getZ() const;
+
+        void setPosition(const Vector3f& position);
+        void setPosition(float x, float y, float z);
+        Vector3f getPosition() const;
 
         void setWidth(float width);
         float getWidth() const;
@@ -26,11 +29,17 @@ namespace Component {
         void setHeight(float height);
         float getHeight() const;
 
-        void setSize(const Vector2f& size);
-        void setSize(float width, float height);
-        Vector2f getSize() const;
+        void setDepth(float depth);
+        float getDepth() const;
+
+        void setSize(const Vector3f& size);
+        void setSize(float width, float height, float depth);
+        Vector3f getSize() const;
+
+        void setRotation(const Vector3f& rotation);
+        Vector3f getRotation() const;
 
     private:
-        Vector2f position, size;
+        Vector3f position, size, rotation;
     };
 }

@@ -59,7 +59,7 @@ namespace GUI {
         this->refresh();
     }
     void Button::setPosition(const Vector2f& position) {
-        transform->setPosition(position);
+        transform->setPosition(Vector3f(position));
         this->refresh();
     }
 
@@ -74,7 +74,7 @@ namespace GUI {
         this->refresh();
     }
     void Button::setSize(const Vector2f& size) {
-        transform->setSize(size);
+        transform->setSize(Vector3f(size));
         this->refresh();
     }
 
