@@ -95,6 +95,10 @@ void Blank::awake() {
 }
 
 void Blank::start() {
+    if (Settings::getInstance().get<bool>("vsync")) {
+        glfwSwapInterval(1);
+    }
+
     glClearColor(0.0f, 0.3f, 0.65f, 0.0f);
     if (Settings::getInstance().get<std::string>("project_type") == "3d") {
         glEnable(GL_DEPTH_TEST);
@@ -116,10 +120,10 @@ void Blank::start() {
 
 void Blank::update() {
     std::chrono::system_clock::time_point time_now_frame = std::chrono::system_clock::now();
-    auto delta_time_ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+    auto delta_time_ms = std::chrono::duration_cast<std::chrono::microseconds>(
             time_now_frame - time_prev_frame).count();
     time_prev_frame = time_now_frame;
-    float delta_time = delta_time_ms / 1000.0f;
+    float delta_time = delta_time_ms / 1000000.0f;
 
     IScene* scene = this->getManager<SceneManager>()->getScene();
     if (scene != nullptr) {
