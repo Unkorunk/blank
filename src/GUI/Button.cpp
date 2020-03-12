@@ -9,6 +9,7 @@ namespace GUI {
         UIComponent::draw(shader);
 
         shader->set("use_texture", 0);
+        shader->set("MVP", this->transform->getModelMatrix());
         shader->set(0, vertices.size() * sizeof(GLfloat), 3, vertices.data());
         shader->set(1, uvs.size() * sizeof(GLfloat), 2, uvs.data());
         shader->set(2, colors.size() * sizeof(GLfloat), 4, colors.data());
@@ -17,7 +18,7 @@ namespace GUI {
 
         Component::Transform* text_transform = text.getComponent<Component::Transform>();
 
-        text.setHeight(transform->getHeight() - (radius[0] + radius[2]));
+        text.setHeight(transform->getHeight() - transform->getHeight() * (border_radius + border_radius));
 
         float width = transform->getWidth() - text_transform->getWidth();
         float height = transform->getHeight() - text_transform->getHeight();
@@ -78,6 +79,13 @@ namespace GUI {
         this->refresh();
     }
 
+    void Button::setBorderRadius(float border_radius) {
+        this->border_radius = border_radius;
+    }
+    float Button::getBorderRadius() const {
+        return this->border_radius;
+    }
+
     std::vector<glm::vec2> Button::quadraticCurve(glm::vec2 start, glm::vec2 control, glm::vec2 end) {
         std::vector<glm::vec2> points;
 
@@ -98,16 +106,12 @@ namespace GUI {
 
     void Button::refresh()
     {
-        radius[0] = transform->getWidth() * 0.05f;
-        radius[1] = transform->getWidth() * 0.05f;
-        radius[2] = transform->getWidth() * 0.05f;
-        radius[3] = transform->getWidth() * 0.05f;
+        float ratio = this->transform->getHeight() / this->transform->getWidth();
 
         vertices = {
-                transform->getX() + transform->getWidth() / 2.0f, transform->getY() - transform->getHeight() / 2.0f, 0.0f,
-
-                transform->getX() + radius[0], transform->getY(), 0.0f,
-                transform->getX() + transform->getWidth() - radius[1], transform->getY(), 0.0f
+                1.0f / 2.0f, -1.0f / 2.0f, 0.0f,
+                ratio * border_radius, 0.0f, 0.0f,
+                1.0f - ratio * border_radius, 0.0f, 0.0f
         };
 
         auto push_vec2 = [this](GLfloat x, GLfloat y) {
@@ -116,31 +120,31 @@ namespace GUI {
             vertices.push_back(0.0f);
         };
 
-        for (const glm::vec2& point : quadraticCurve(glm::vec2(-radius[1], 0.0f),
+        for (const glm::vec2& point : quadraticCurve(glm::vec2(-ratio * border_radius, 0.0f),
             glm::vec2(0.0f, 0.0f),
-            glm::vec2(0.0f, -radius[1]))) {
-            push_vec2(transform->getX() + transform->getWidth() + point.x, transform->getY() + point.y);
+            glm::vec2(0.0f, -border_radius))) {
+            push_vec2(1.0f + point.x, point.y);
         }
-        push_vec2(transform->getX() + transform->getWidth(), transform->getY() - radius[1]);
-        push_vec2(transform->getX() + transform->getWidth(), transform->getY() - transform->getHeight() + radius[2]);
-        for (const glm::vec2& point : quadraticCurve(glm::vec2(0.0f, radius[2]),
+        push_vec2(1.0f, -border_radius);
+        push_vec2(1.0f, -1.0f + border_radius);
+        for (const glm::vec2& point : quadraticCurve(glm::vec2(0.0f, border_radius),
             glm::vec2(0.0f, 0.0f),
-            glm::vec2(-radius[2], 0.0f))) {
-            push_vec2(transform->getX() + transform->getWidth() + point.x, transform->getY() - transform->getHeight() + point.y);
+            glm::vec2(-ratio * border_radius, 0.0f))) {
+            push_vec2(1.0f + point.x, -1.0f + point.y);
         }
-        push_vec2(transform->getX() + transform->getWidth() - radius[2], transform->getY() - transform->getHeight());
-        push_vec2(transform->getX() + radius[3], transform->getY() - transform->getHeight());
-        for (const glm::vec2& point : quadraticCurve(glm::vec2(radius[3], 0.0f),
+        push_vec2(1.0f - ratio * border_radius, -1.0f);
+        push_vec2(ratio * border_radius, -1.0f);
+        for (const glm::vec2& point : quadraticCurve(glm::vec2(ratio * border_radius, 0.0f),
             glm::vec2(0.0f, 0.0f),
-            glm::vec2(0.0f, radius[3]))) {
-            push_vec2(transform->getX() + point.x, transform->getY() - transform->getHeight() + point.y);
+            glm::vec2(0.0f, border_radius))) {
+            push_vec2(point.x, -1.0f + point.y);
         }
-        push_vec2(transform->getX(), transform->getY() - transform->getHeight() + radius[3]);
-        push_vec2(transform->getX(), transform->getY() - radius[0]);
-        for (const glm::vec2& point : quadraticCurve(glm::vec2(0.0f, -radius[0]),
+        push_vec2(0.0f, -1.0f + border_radius);
+        push_vec2(0.0f, -border_radius);
+        for (const glm::vec2& point : quadraticCurve(glm::vec2(0.0f, -border_radius),
             glm::vec2(0.0f, 0.0f),
-            glm::vec2(radius[0], 0.0f))) {
-            push_vec2(transform->getX() + point.x, transform->getY() + point.y);
+            glm::vec2(ratio * border_radius, 0.0f))) {
+            push_vec2(point.x, point.y);
         }
 
         vertices_count = vertices.size() / 3;
@@ -155,7 +159,7 @@ namespace GUI {
         uvs.resize(vertices_count * 2);
     }
 
-    Button::Button() : input_mouse(new Component::InputMouse()) {
+    Button::Button() : input_mouse(new Component::InputMouse()), border_radius(0.2f) {
         this->addComponent(this->input_mouse.get());
     }
 

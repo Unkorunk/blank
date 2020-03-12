@@ -34,13 +34,13 @@ namespace GUI {
         glBindTexture(GL_TEXTURE_2D, texture_id);
 
         std::array<GLfloat, 6 * 3> vertices = {
-                transform->getX(), transform->getY(), 0.0f,
-                transform->getX(), transform->getY() - transform->getHeight(), 0.0f,
-                transform->getX() + transform->getWidth(), transform->getY(), 0.0f,
+                0.0f, 0.0f, 0.0f,
+                0.0f, -1.0f, 0.0f,
+                1.0f, 0.0f, 0.0f,
 
-                transform->getX() + transform->getWidth(), transform->getY(), 0.0f,
-                transform->getX(), transform->getY() - transform->getHeight(), 0.0f,
-                transform->getX() + transform->getWidth(), transform->getY() - transform->getHeight(), 0.0f
+                1.0f, 0.0f, 0.0f,
+                0.0f, -1.0f, 0.0f,
+                1.0f, -1.0f, 0.0f
         };
 
         std::array<GLfloat, 6 * 2> uvs = {
@@ -51,11 +51,14 @@ namespace GUI {
                 0.0f, 0.0f,
                 1.0f, 0.0f
         };
+        std::array<GLfloat, 6 * 4> colors = {};
 
         shader->set("use_texture", 1);
         shader->set("m_sampler", 0);
+        shader->set("MVP", this->transform->getModelMatrix());
         shader->set(0, vertices.size() * sizeof(GLfloat), 3, vertices.data());
         shader->set(1, uvs.size() * sizeof(GLfloat), 2, uvs.data());
+        shader->set(2, colors.size() * sizeof(GLfloat), 4, colors.data());
 
         glDrawArrays(GL_TRIANGLES, 0, 3 * 2);
     }

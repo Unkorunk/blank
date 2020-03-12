@@ -12,17 +12,15 @@ namespace GUI {
 
     void UIComponent::draw(Shader *shader) {
         if (Settings::getInstance().get<bool>("debug")) {
-            shader->set("use_texture", 0);
-
             std::array<GLfloat, 8 * 3> vertices = {
-                    transform->getX(), transform->getY(), 0.0f,
-                    transform->getX() + transform->getWidth(), transform->getY(), 0.0f,
-                    transform->getX() + transform->getWidth(), transform->getY(), 0.0f,
-                    transform->getX() + transform->getWidth(), transform->getY() - transform->getHeight(), 0.0f,
-                    transform->getX() + transform->getWidth(), transform->getY() - transform->getHeight(), 0.0f,
-                    transform->getX(), transform->getY() - transform->getHeight(), 0.0f,
-                    transform->getX(), transform->getY() - transform->getHeight(), 0.0f,
-                    transform->getX(), transform->getY(), 0.0f
+                    0.0f, 0.0f, 0.0f,
+                    1.0f, 0.0f, 0.0f,
+                    1.0f, 0.0f, 0.0f,
+                    1.0f, -1.0f, 0.0f,
+                    1.0f, -1.0f, 0.0f,
+                    0.0f, -1.0f, 0.0f,
+                    0.0f, -1.0f, 0.0f,
+                    0.0f, 0.0f, 0.0f
             };
             std::array<GLfloat, 8 * 4> colors = {};
             for (size_t i = 0; i < 8; i++) {
@@ -31,9 +29,13 @@ namespace GUI {
                 colors[4 * i + 2] = 0.0f;
                 colors[4 * i + 3] = 1.0f;
             }
+            std::array<GLfloat, 8 * 2> uvs = {};
 
-            shader->set(2, colors.size() * sizeof(GLfloat), 4, colors.data());
+            shader->set("use_texture", 0);
+            shader->set("MVP", this->transform->getModelMatrix());
             shader->set(0, vertices.size() * sizeof(GLfloat), 3, vertices.data());
+            shader->set(1, uvs.size() * sizeof(GLfloat), 2, uvs.data());
+            shader->set(2, colors.size() * sizeof(GLfloat), 4, colors.data());
 
             glDrawArrays(GL_LINES, 0, 2 * 4);
         }

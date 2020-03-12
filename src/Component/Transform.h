@@ -4,12 +4,17 @@
 
 #pragma once
 
+#include <glm/mat4x4.hpp>
+#include <glm/ext/matrix_transform.hpp>
+
 #include "IComponent.h"
 #include "Utility/Vector3f.h"
 
 namespace Component {
     class Transform : public IComponent {
     public:
+        Transform();
+
         void setX(float x);
         float getX() const;
 
@@ -39,7 +44,13 @@ namespace Component {
         void setRotation(const Vector3f& rotation);
         Vector3f getRotation() const;
 
+        glm::mat4 getModelMatrix() const;
+
     private:
         Vector3f position, size, rotation;
+        glm::mat4 model_matrix;
+
+        void logic_update_model_matrix();
+
     };
 }

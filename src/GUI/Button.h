@@ -37,11 +37,14 @@ namespace GUI {
         void setHeight(float height);
         void setSize(const Vector2f& size);
 
+        void setBorderRadius(float border_radius);
+        float getBorderRadius() const;
+
         MouseEvent getMouseEvent() const;
         void setMouseCallback(MouseEvent mouse_event, std::function<void(const Vector2f&)> callback);
 
     private:
-        float radius[4] = {0.05f, 0.05f, 0.05f, 0.05f};
+        float border_radius;
         std::vector<glm::vec2> quadraticCurve(glm::vec2 start, glm::vec2 control, glm::vec2 end);
 
         std::unique_ptr<Component::InputMouse> input_mouse;

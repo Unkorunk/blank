@@ -7,9 +7,10 @@ layout(location = 2) in vec4 in_color;
 out vec2 vert_uv;
 out vec4 vert_color;
 
+uniform mat4 MVP;
+
 void main() {
-    gl_Position.xyz = in_position;
-    gl_Position.w = 1.0;
+    gl_Position = MVP * vec4(in_position, 1.0f);
 
     vert_uv = in_uv;
     vert_color = in_color;
