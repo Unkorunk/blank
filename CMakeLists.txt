@@ -25,6 +25,7 @@ add_library(blank
         src/Mouse/MouseEvent.h
         src/Mouse/MouseManager.cpp src/Mouse/MouseManager.h
         src/Utility/Vector2f.cpp src/Utility/Vector2f.h
+        src/Utility/Vector3f.cpp src/Utility/Vector3f.h
         src/Scene/SceneManager.cpp src/Scene/SceneManager.h
         src/Scene/IScene.h
         src/GameObject/GameObject.cpp src/GameObject/GameObject.h

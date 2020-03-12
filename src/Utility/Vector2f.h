@@ -12,8 +12,10 @@ public:
     Vector2f();
     Vector2f(const Vector2f& data);
     Vector2f(float x, float y);
+    explicit Vector2f(const glm::vec2& data);
 
     Vector2f& operator =(const Vector2f& data);
+    Vector2f& operator =(const glm::vec2& data);
 
     Vector2f operator +(const Vector2f& other) const;
     Vector2f& operator +=(const Vector2f& other);
@@ -32,6 +34,7 @@ public:
     bool operator ==(const Vector2f& other) const;
     bool operator !=(const Vector2f& other) const;
 
+    float lengthSqr() const;
     float length() const;
 
     Vector2f normalized() const;
@@ -43,6 +46,7 @@ public:
     void setY(float y);
     float getY() const;
 
+    static float distanceSqr(const Vector2f& lhs, const Vector2f& rhs);
     static float distance(const Vector2f& lhs, const Vector2f& rhs);
     static float dot(const Vector2f& lhs, const Vector2f& rhs);
     static float angle(const Vector2f& lhs, const Vector2f& rhs);

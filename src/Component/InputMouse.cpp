@@ -70,7 +70,7 @@ namespace Component {
                 MouseEvent new_state = this->getBlank()->getManager<MouseManager>()->getMouseEvent();
                 if ((this->getMouseEvent() == MouseEvent::MOUSE_MOVE || this->getMouseEvent() == MouseEvent::MOUSE_CONTAINS) &&
                     new_state == MouseEvent::MOUSE_PRESS) {
-                    if (Vector2f::distance(prev_mouse_position, mouse_position) > 1e-2) {
+                    if (Vector2f::distanceSqr(prev_mouse_position, mouse_position) > 1e-4) {
                         new_state = MouseEvent::MOUSE_MOVE;
                     }
                     else {

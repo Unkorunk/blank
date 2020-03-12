@@ -7,8 +7,14 @@
 Vector2f::Vector2f() : x(), y() {}
 Vector2f::Vector2f(const Vector2f &data) : x(data.x), y(data.y) {}
 Vector2f::Vector2f(float x, float y) : x(x), y(y) {}
+Vector2f::Vector2f(const glm::vec2& data) : x(data.x), y(data.y) {}
 
-Vector2f &Vector2f::operator=(const Vector2f &data) = default;
+Vector2f& Vector2f::operator=(const Vector2f& data) = default;
+Vector2f& Vector2f::operator=(const glm::vec2& data) {
+    this->x = data.x;
+    this->y = data.y;
+    return *this;
+}
 
 Vector2f Vector2f::operator+(const Vector2f &other) const {
     Vector2f buff = *this;
@@ -68,8 +74,13 @@ bool Vector2f::operator!=(const Vector2f &other) const {
     return !this->operator==(other);
 }
 
+float Vector2f::lengthSqr() const
+{
+    return std::fmaf(this->x, this->x, this->y * this->y);
+}
+
 float Vector2f::length() const {
-    return sqrtf(std::fmaf(this->x, this->x, this->y * this->y));
+    return sqrtf(this->lengthSqr());
 }
 
 void Vector2f::normalize() {
@@ -95,6 +106,11 @@ void Vector2f::setY(float y) {
 
 float Vector2f::getY() const {
     return this->y;
+}
+
+float Vector2f::distanceSqr(const Vector2f& lhs, const Vector2f& rhs)
+{
+    return (lhs - rhs).lengthSqr();
 }
 
 float Vector2f::distance(const Vector2f &lhs, const Vector2f &rhs) {
