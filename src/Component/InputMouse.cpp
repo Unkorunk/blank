@@ -66,6 +66,7 @@ namespace Component {
                     {0, 8, 4, 8, 4, 5, 8, 7},
                     {8, 8, 8, 8, 8, 8, 8, 8}
             };
+
             if (mouse_on_button) {
                 MouseEvent new_state = this->getBlank()->getManager<MouseManager>()->getMouseEvent();
                 if ((this->getMouseEvent() == MouseEvent::MOUSE_MOVE || this->getMouseEvent() == MouseEvent::MOUSE_CONTAINS) &&
@@ -78,13 +79,17 @@ namespace Component {
                     }
                 }
 
-
                 if (this->getMouseEvent() == MouseEvent::MOUSE_NOT_CONTAINS || this->getMouseEvent() == MouseEvent::MOUSE_LEAVE) {
                     this->mouseEvent(MouseEvent::MOUSE_ENTER, mouse_pos);
                 }
                 else {
-                    
-                    this->mouseEvent(static_cast<MouseEvent>(next_state[static_cast<int>(this->getMouseEvent())][static_cast<int>(new_state)]), mouse_pos);
+                    if (this->getMouseEvent() == MouseEvent::MOUSE_PRESS && new_state == MouseEvent::MOUSE_MOVE) {
+                        this->mouseEvent(MouseEvent::MOUSE_UP, mouse_pos);
+                        this->mouseEvent(MouseEvent::MOUSE_MOVE, mouse_pos);
+                    } else {
+                        auto ns = static_cast<MouseEvent>(next_state[static_cast<int>(this->getMouseEvent())][static_cast<int>(new_state)]);
+                        this->mouseEvent(ns, mouse_pos);
+                    }
                 }
 
                 if (this->getMouseEvent() == MouseEvent::MOUSE_UNDEFINED_BEHAVIOUR) {
