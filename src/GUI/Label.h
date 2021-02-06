@@ -41,6 +41,8 @@ namespace GUI {
     private:
         std::unique_ptr<Texture> texture;
 
+        void updateTextureTransform();
+
         std::string text;
         Font *font;
     };
