@@ -34,6 +34,9 @@ public:
         return managers.getChild<T>();
     }
 
+    glm::mat4 getProjection() const;
+    Vector2f unProj(const Vector2f& mouse_position) const;
+
 private:
     GLFWwindow *window;
 
@@ -44,6 +47,10 @@ private:
     void update();
 
     std::chrono::system_clock::time_point time_prev_frame;
+
+    void updateProj();
+    int window_width = 0, window_height = 0;
+    glm::mat4 projection = glm::mat4(1.0f);
 
 protected:
 

@@ -3,22 +3,25 @@
 //
 
 #include "Button.h"
+#include "Blank.h"
 
 namespace GUI {
     void Button::draw(Shader* shader) {
         UIComponent::draw(shader);
 
+        glm::mat4 projection = this->getBlank()->getProjection();
+
         shader->set("use_texture", 0);
-        shader->set("MVP", this->transform->getModelMatrix());
+        shader->set("MVP", projection * this->transform->getModelMatrix());
         shader->set(0, vertices.size() * sizeof(GLfloat), 3, vertices.data());
         shader->set(1, uvs.size() * sizeof(GLfloat), 2, uvs.data());
         shader->set(2, colors.size() * sizeof(GLfloat), 4, colors.data());
 
         glDrawArrays(GL_TRIANGLE_FAN, 0, static_cast<GLsizei>(vertices_count));
 
-        Component::Transform* text_transform = text.getComponent<Component::Transform>();
+        Component::Transform* text_transform = text->getComponent<Component::Transform>();
 
-        text.setHeight(transform->getHeight() - transform->getHeight() * (border_radius + border_radius));
+        text->setHeight(transform->getHeight() - transform->getHeight() * (border_radius + border_radius));
 
         float width = transform->getWidth() - text_transform->getWidth();
         float height = transform->getHeight() - text_transform->getHeight();
@@ -26,27 +29,27 @@ namespace GUI {
         text_transform->setX(this->transform->getX() + width / 2.0f);
         text_transform->setY(this->transform->getY() - height / 2.0f);
 
-        text.draw(shader);
+        text->draw(shader);
     }
 
     void Button::setFont(Font* font)
     {
-        this->text.setFont(font);
+        this->text->setFont(font);
     }
 
     Font* Button::getFont() const
     {
-        return this->text.getFont();
+        return this->text->getFont();
     }
 
     void Button::setText(const std::string& text)
     {
-        this->text.setText(text);
+        this->text->setText(text);
     }
 
     std::string Button::getText() const
     {
-        return this->text.getText();
+        return this->text->getText();
     }
 
     void Button::setX(float x)
@@ -159,8 +162,9 @@ namespace GUI {
         uvs.resize(vertices_count * 2);
     }
 
-    Button::Button() : input_mouse(new Component::InputMouse()), border_radius(0.2f) {
+    Button::Button() : input_mouse(new Component::InputMouse()), border_radius(0.2f), text(new Label()) {
         this->addComponent(this->input_mouse.get());
+        this->addChild(text.get());
     }
 
     MouseEvent Button::getMouseEvent() const {

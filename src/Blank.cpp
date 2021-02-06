@@ -125,6 +125,8 @@ void Blank::update() {
     time_prev_frame = time_now_frame;
     float delta_time = delta_time_ms / 1000000.0f;
 
+    this->updateProj();
+
     IScene* scene = this->getManager<SceneManager>()->getScene();
     if (scene != nullptr) {
         scene->update(delta_time);
@@ -143,4 +145,20 @@ void Blank::update() {
 
 GLFWwindow *Blank::getWindow() const {
     return this->window;
+}
+
+void Blank::updateProj() {
+    glfwGetWindowSize(this->getWindow(), &window_width, &window_height);
+    float ratio = static_cast<float>(window_width) / window_height;
+    projection = glm::ortho(-ratio, ratio, -1.0f, 1.0f, -1.0f, 1.0f);
+}
+
+glm::mat4 Blank::getProjection() const {
+    return this->projection;
+}
+
+Vector2f Blank::unProj(const Vector2f& mouse_position) const {
+    float ratio = static_cast<float>(window_width) / window_height;
+    glm::vec4 un_proj = glm::inverse(projection) * glm::vec4(mouse_position.getX(), mouse_position.getY(), 1.0f, 1.0f);
+    return Vector2f(2.0f * un_proj.x / window_width - ratio, -2.0f * un_proj.y / window_height + 1.0f);
 }

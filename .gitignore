@@ -1,7 +1,10 @@
+assets
+
 .idea
 cmake-build-debug
 
 .vs
+.vscode
 build
 out
 /CMakeSettings.json

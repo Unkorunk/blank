@@ -54,7 +54,7 @@ namespace GUI {
         std::vector<GLfloat> colors;
         std::vector<GLfloat> uvs;
 
-        Label text;
+        std::unique_ptr<Label> text;
 
         void refresh();
 

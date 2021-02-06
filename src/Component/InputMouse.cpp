@@ -36,13 +36,10 @@ namespace Component {
             init = true;
         }
 
-        int window_width, window_height;
-        glfwGetWindowSize(this->getBlank()->getWindow(), &window_width, &window_height);
-
-        Vector2f mouse_position = this->getBlank()->getManager<MouseManager>()->getMousePosition();
-        
-        float mouse_x = 2.0f * mouse_position.getX() / window_width - 1.0f,
-                mouse_y = -2.0f * mouse_position.getY() / window_height + 1.0f;
+        Vector2f mouse_position = this->getBlank()->unProj(
+            this->getBlank()->getManager<MouseManager>()->getMousePosition()
+        );
+        float mouse_x = mouse_position.getX(), mouse_y = mouse_position.getY();
 
         Component::Transform *transform = this->getParent()->getComponent<Component::Transform>();
         if (transform) {

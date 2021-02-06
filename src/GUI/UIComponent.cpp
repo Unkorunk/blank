@@ -31,8 +31,10 @@ namespace GUI {
             }
             std::array<GLfloat, 8 * 2> uvs = {};
 
+            glm::mat4 projection = this->getBlank()->getProjection();
+
             shader->set("use_texture", 0);
-            shader->set("MVP", this->transform->getModelMatrix());
+            shader->set("MVP", projection * this->transform->getModelMatrix());
             shader->set(0, vertices.size() * sizeof(GLfloat), 3, vertices.data());
             shader->set(1, uvs.size() * sizeof(GLfloat), 2, uvs.data());
             shader->set(2, colors.size() * sizeof(GLfloat), 4, colors.data());

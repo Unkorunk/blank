@@ -39,7 +39,7 @@ namespace GUI {
         void setSize(const Vector2f& size);
 
     private:
-        Texture texture;
+        std::unique_ptr<Texture> texture;
 
         std::string text;
         Font *font;

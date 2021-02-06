@@ -3,6 +3,7 @@
 //
 
 #include "Texture.h"
+#include "Blank.h"
 
 namespace GUI {
     Texture::Texture() : texture_id(), buffer(), rows(), cols() {
@@ -53,9 +54,11 @@ namespace GUI {
         };
         std::array<GLfloat, 6 * 4> colors = {};
 
+        glm::mat4 projection = this->getBlank()->getProjection();
+
         shader->set("use_texture", 1);
         shader->set("m_sampler", 0);
-        shader->set("MVP", this->transform->getModelMatrix());
+        shader->set("MVP", projection * this->transform->getModelMatrix());
         shader->set(0, vertices.size() * sizeof(GLfloat), 3, vertices.data());
         shader->set(1, uvs.size() * sizeof(GLfloat), 2, uvs.data());
         shader->set(2, colors.size() * sizeof(GLfloat), 4, colors.data());

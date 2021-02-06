@@ -23,7 +23,7 @@ public:
         this->fps_label = std::make_unique<GUI::Label>();
 
         Component::Transform* fps_label_transform = fps_label->getComponent<Component::Transform>();
-        fps_label_transform->setPosition(Vector3f(-1.0f, 1.0f, 0.0f));
+        fps_label_transform->setPosition(Vector3f(-4.0f / 3.0f, 1.0f, 0.0f));
         this->fps_label->setHeight(0.08f);
         this->fps_label->setFont(roboto_font.get());
 
@@ -90,9 +90,9 @@ public:
             int window_width, window_height;
             glfwGetWindowSize(this->getBlank()->getWindow(), &window_width, &window_height);
 
-            target_position = this->mouse->getMousePosition();
-            target_position.setX(2.0f * target_position.getX() / window_width - 1.0f);
-            target_position.setY(-2.0f * target_position.getY() / window_height + 1.0f);
+            target_position = this->getBlank()->unProj(
+                this->mouse->getMousePosition()
+            );
         }
 
         if (Vector2f::distanceSqr(target_position, position_player) > 1e-4) {
