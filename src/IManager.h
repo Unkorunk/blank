@@ -11,7 +11,7 @@ public:
     virtual ~IManager() = default;
 
     virtual void start() {}
-    virtual void update() {}
+    virtual void update(float delta_time) {}
 
 private:
     Blank* blank;

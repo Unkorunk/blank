@@ -4,11 +4,14 @@ project(blank)
 
 set(CMAKE_CXX_STANDARD 17)
 
+set(BOX2D_BUILD_TESTBED OFF)
+
 add_subdirectory(submodules/json)
 add_subdirectory(submodules/glm)
 add_subdirectory(submodules/glfw)
 add_subdirectory(submodules/glew/build/cmake)
 add_subdirectory(submodules/freetype2)
+add_subdirectory(submodules/box2d)
 
 add_library(blank
         src/Blank.h src/Blank.cpp
@@ -31,7 +34,9 @@ add_library(blank
         src/GameObject/GameObject.cpp src/GameObject/GameObject.h
         src/Component/IComponent.h
         src/Component/Transform.cpp src/Component/Transform.h
-        src/Component/InputMouse.cpp src/Component/InputMouse.h src/IManager.h)
+        src/Component/InputMouse.cpp src/Component/InputMouse.h
+        src/IManager.h
+        src/Physics/PhysicsManager.cpp src/Physics/PhysicsManager.h)
 target_include_directories(blank PUBLIC src)
 
 if (MSVC)
@@ -43,7 +48,7 @@ endif()
 find_package(OpenGL REQUIRED)
 
 target_include_directories(blank PUBLIC ${PROJECT_SOURCE_DIR}/submodules/glew/include)
-target_link_libraries(blank freetype glew_s glfw OpenGL::GL nlohmann_json::nlohmann_json glm::glm)
+target_link_libraries(blank box2d freetype glew_s glfw OpenGL::GL nlohmann_json::nlohmann_json glm::glm)
 
 add_executable(example example/main.cpp)
 target_link_libraries(example PUBLIC blank)

@@ -51,7 +51,7 @@ void MouseManager::mouseEnterCallback(GLFWwindow *window, int entered) {
 }
 
 void MouseManager::mouseMoveCallback(GLFWwindow *window, double xpos, double ypos) {
-    this->update();
+    this->update(0.0f);
     
     if (this->mouse_event != MouseEvent::MOUSE_PRESS) {
         this->mouse_event = MouseEvent::MOUSE_MOVE;
@@ -63,7 +63,7 @@ void MouseManager::mouseMoveCallback(GLFWwindow *window, double xpos, double ypo
     );
 }
 
-void MouseManager::update() {
+void MouseManager::update(float delta_time) {
     switch (mouse_event) {
         case MouseEvent::MOUSE_DOWN:
             mouse_event = MouseEvent::MOUSE_PRESS;

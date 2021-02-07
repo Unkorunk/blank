@@ -13,3 +13,6 @@
 [submodule "submodules/freetype2"]
 	path = submodules/freetype2
 	url = git://git.savannah.gnu.org/freetype/freetype2.git
+[submodule "submodules/box2d"]
+	path = submodules/box2d
+	url = https://github.com/erincatto/box2d.git

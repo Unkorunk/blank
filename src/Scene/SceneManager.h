@@ -26,7 +26,7 @@ public:
 
     IScene *getScene() const;
 
-    void update() override;
+    void update(float delta_time) override;
 
 private:
     void logic_change_scene();

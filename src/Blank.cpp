@@ -110,6 +110,7 @@ void Blank::start() {
     this->managers.addChild(new SceneManager(this));
     this->managers.addChild(new MouseManager(this));
     this->managers.addChild(new ResourceManager(this));
+    this->managers.addChild(new PhysicsManager(this));
 
     for (IManager* manager : this->managers.getChildren()) {
         manager->start();
@@ -139,7 +140,7 @@ void Blank::update() {
     }
 
     for (IManager* manager : this->managers.getChildren()) {
-        manager->update();
+        manager->update(delta_time);
     }
 }
 

@@ -19,6 +19,7 @@
 #include "Scene/SceneManager.h"
 #include "Mouse/MouseManager.h"
 #include "ResourceManager.h"
+#include "Physics/PhysicsManager.h"
 
 class Blank {
 public:

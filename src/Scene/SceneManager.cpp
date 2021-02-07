@@ -10,7 +10,7 @@ IScene *SceneManager::getScene() const {
     return this->selected_scene.get();
 }
 
-void SceneManager::update()
+void SceneManager::update(float delta_time)
 {
     this->logic_change_scene();
 }

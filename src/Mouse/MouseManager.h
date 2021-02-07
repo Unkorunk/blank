@@ -20,7 +20,7 @@ public:
     virtual ~MouseManager() = default;
 
     void start() override;
-    void update() override;
+    void update(float delta_time) override;
 
     MouseEvent getMouseEvent() const;
     Vector2f getMousePosition() const;
