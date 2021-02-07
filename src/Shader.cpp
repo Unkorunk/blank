@@ -9,7 +9,7 @@ Shader::Shader(const std::string& shader_name) {
 
     std::vector<GLuint> shaders_ids;
 
-    const std::string dir_shaders = "./shaders";
+    const std::string dir_shaders = "./assets/shaders";
 
     const std::vector<std::pair<GLuint, std::string>> shader_types{
             {GL_VERTEX_SHADER,          "vert"},

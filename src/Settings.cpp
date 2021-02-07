@@ -10,7 +10,7 @@ Settings &Settings::getInstance() {
 }
 
 Settings::Settings() {
-    std::ifstream settings_ifs("settings.json");
+    std::ifstream settings_ifs("./assets/settings.json");
     if (!settings_ifs.is_open()) {
         throw std::logic_error("[settings.json] not found file");
     }

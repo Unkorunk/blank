@@ -129,17 +129,17 @@ public:
         this->button_start->setFont(roboto_font.get());
         this->button_start->setText("Start");
 
-        this->button_press_me = std::make_unique<GUI::Button>();
-        this->button_press_me->setX(-0.5f / 2.0f);
-        this->button_press_me->setY(1.0f / 2.0f);
-        this->button_press_me->setWidth(1.0f / 2.0f);
-        this->button_press_me->setHeight(0.3f / 2.0f);
+        this->button_hover_me = std::make_unique<GUI::Button>();
+        this->button_hover_me->setX(-0.5f / 2.0f);
+        this->button_hover_me->setY(1.0f / 2.0f);
+        this->button_hover_me->setWidth(1.0f / 2.0f);
+        this->button_hover_me->setHeight(0.3f / 2.0f);
 
-        this->button_press_me->setFont(roboto_font.get());
-        this->button_press_me->setText("Press Me");
+        this->button_hover_me->setFont(roboto_font.get());
+        this->button_hover_me->setText("Hover Me");
 
         this->game_object_ui.addChild(button_start.get());
-        this->game_object_ui.addChild(button_press_me.get());
+        this->game_object_ui.addChild(button_hover_me.get());
 
         this->addChild(&game_object_ui);
 
@@ -149,8 +149,9 @@ public:
     void update(float delta_time) override {
         FPSScene::update(delta_time);
 
-        if (this->button_press_me->getMouseEvent() == MouseEvent::MOUSE_DOWN || this->button_press_me->getMouseEvent() == MouseEvent::MOUSE_PRESS) {
-            Component::Transform* button_rotate_tranform = this->button_press_me->getComponent<Component::Transform>();
+        if (this->button_hover_me->getMouseEvent() == MouseEvent::MOUSE_MOVE ||
+            this->button_hover_me->getMouseEvent() == MouseEvent::MOUSE_CONTAINS) {
+            Component::Transform* button_rotate_tranform = this->button_hover_me->getComponent<Component::Transform>();
             button_rotate_tranform->setRotation(
                 button_rotate_tranform->getRotation() + Vector3f(0.0f, 0.0f, 3.0f) * delta_time
             );
@@ -159,7 +160,7 @@ public:
 
 private:
     std::unique_ptr<GUI::Button> button_start;
-    std::unique_ptr<GUI::Button> button_press_me;
+    std::unique_ptr<GUI::Button> button_hover_me;
 
     GameObject game_object_ui;
 

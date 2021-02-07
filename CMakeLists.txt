@@ -45,9 +45,9 @@ find_package(OpenGL REQUIRED)
 target_include_directories(blank PUBLIC ${PROJECT_SOURCE_DIR}/submodules/glew/include)
 target_link_libraries(blank freetype glew_s glfw OpenGL::GL nlohmann_json::nlohmann_json glm::glm)
 
-configure_file(settings.json settings.json COPYONLY)
-file(COPY shaders DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-file(COPY assets DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-
 add_executable(example example/main.cpp)
 target_link_libraries(example PUBLIC blank)
+
+add_custom_command(TARGET example PRE_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/assets $<TARGET_FILE_DIR:example>/assets)
