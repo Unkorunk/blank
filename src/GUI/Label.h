@@ -38,10 +38,13 @@ namespace GUI {
         void setHeight(float height);
         void setSize(const Vector2f& size);
 
+        void setRatio(float ratio);
+        float getRatio() const;
+
     private:
         std::unique_ptr<Texture> texture;
 
-        void updateTextureTransform();
+        float ratio = 1.0f;
 
         std::string text;
         Font *font;

@@ -7,7 +7,6 @@
 namespace GUI {
     Label::Label() : text(), font(nullptr), texture(new Texture()) {
         this->addChild(texture.get());
-        updateTextureTransform();
     }
 
     Label::~Label() = default;
@@ -15,21 +14,11 @@ namespace GUI {
     void Label::draw(Shader* shader) {
         UIComponent::draw(shader);
 
-        updateTextureTransform();
-
         if (font == nullptr || text.empty()) {
             return;
         }
 
         texture->draw(shader);
-    }
-
-    void Label::updateTextureTransform() {
-        Component::Transform *texture_transform = texture->getComponent<Component::Transform>();
-        texture_transform->setX(transform->getX());
-        texture_transform->setY(transform->getY());
-        texture_transform->setWidth(transform->getWidth());
-        texture_transform->setHeight(transform->getHeight());
     }
 
     void Label::setText(const std::string &text) {
@@ -111,18 +100,27 @@ namespace GUI {
 
     void Label::setWidth(float width) {
         transform->setWidth(width);
-        transform->setHeight(static_cast<float>(texture->getRows()) * transform->getWidth() / static_cast<float>(texture->getCols()));
-        updateTextureTransform();
+        transform->setHeight(
+            static_cast<float>(texture->getRows()) * transform->getWidth() / static_cast<float>(texture->getCols()) * ratio
+        );
     }
 
     void Label::setHeight(float height) {
         transform->setHeight(height);
-        transform->setWidth(static_cast<float>(texture->getCols()) * transform->getHeight() / static_cast<float>(texture->getRows()));
-        updateTextureTransform();
+        transform->setWidth(
+            static_cast<float>(texture->getCols()) * transform->getHeight() / static_cast<float>(texture->getRows()) * (1.0f / ratio)
+        );
     }
 
     void Label::setSize(const Vector2f& size) {
         transform->setWidth(size.getX());
-        updateTextureTransform();
+    }
+
+    void Label::setRatio(float ratio) {
+        this->ratio = ratio;
+    }
+
+    float Label::getRatio() const {
+        return this->ratio;
     }
 }

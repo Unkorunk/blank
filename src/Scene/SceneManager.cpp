@@ -17,9 +17,9 @@ void SceneManager::update()
 
 void SceneManager::logic_change_scene()
 {
-    if (query_scene != nullptr) {
-        this->selected_scene = std::unique_ptr<IScene>(query_scene);
-        query_scene = nullptr;
+    if (query_scene) {
+        this->query_scene.swap(this->selected_scene);
+        this->query_scene.reset(nullptr);
         this->selected_scene->start();
     }
 }

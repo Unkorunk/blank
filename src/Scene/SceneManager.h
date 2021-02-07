@@ -16,10 +16,7 @@ public:
 
     template <typename T, typename... Args>
     void create(Args... args) {
-        if (query_scene != nullptr) {
-            delete query_scene;
-        }
-        this->query_scene = new T(std::forward<Args>(args)...);
+        this->query_scene = std::make_unique<T>(std::forward<Args>(args)...);
         this->query_scene->blank = this->getBlank();
         this->query_scene->setShader(this->getBlank()->getManager<ResourceManager>()->getDefaultShader());
         if (!selected_scene) {
@@ -35,6 +32,6 @@ private:
     void logic_change_scene();
 
     std::unique_ptr<IScene> selected_scene;
-    IScene* query_scene = nullptr;
+    std::unique_ptr<IScene> query_scene;
 
 };

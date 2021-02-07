@@ -3,9 +3,12 @@
 //
 
 #include "Transform.h"
+#include "../GameObject/GameObject.h"
 
 namespace Component {
-    Transform::Transform() : position(), size(1.0f, 1.0f, 1.0f), rotation() {
+    Transform::Transform() : position(), size(1.0f, 1.0f, 1.0f), rotation() {}
+
+    void Transform::start() {
         this->logic_update_model_matrix();
     }
 
@@ -97,11 +100,44 @@ namespace Component {
         return this->model_matrix;
     }
 
+    Transform* Transform::findClosestParentTransform(GameObject* parent) const {
+        if (parent == nullptr) {
+            return nullptr;
+        }
+
+        Transform* transform = parent->getComponent<Transform>();
+        if (transform) {
+            return transform;
+        }
+
+        return findClosestParentTransform(parent->getParent());
+    }
+
+    void Transform::updateChildTransform(GameObject* child) {
+        if (Transform* child_transform = child->getComponent<Transform>()) {
+            child_transform->logic_update_model_matrix();
+            return;
+        }
+
+        for (GameObject* child : child->getChildren()) {
+            updateChildTransform(child);
+        }
+    }
+
     void Transform::logic_update_model_matrix() {
-        this->model_matrix = glm::translate(glm::mat4(1.0f), this->position.toGLM());
+        glm::mat4 parent_model_matrix(1.0f);
+        if (Transform* parent_transform = findClosestParentTransform(this->getParent()->getParent())) {
+            parent_model_matrix = parent_transform->getModelMatrix();
+        }
+
+        this->model_matrix = glm::translate(parent_model_matrix, this->position.toGLM());
         this->model_matrix = glm::rotate(this->model_matrix, this->rotation.getX(), glm::vec3(1.0f, 0.0f, 0.0f));
         this->model_matrix = glm::rotate(this->model_matrix, this->rotation.getY(), glm::vec3(0.0f, 1.0f, 0.0f));
         this->model_matrix = glm::rotate(this->model_matrix, this->rotation.getZ(), glm::vec3(0.0f, 0.0f, 1.0f));
         this->model_matrix = glm::scale(this->model_matrix, this->size.toGLM());
+
+        for (GameObject* child : this->getParent()->getChildren()) {
+            updateChildTransform(child);
+        }
     }
 }

@@ -6,19 +6,14 @@
 #include "Blank.h"
 
 MouseManager::MouseManager(Blank *blank)
-        : IManager(blank), mouse_event(MouseEvent::MOUSE_NOT_CONTAINS), mouse_position_x(), mouse_position_y() {
-
-}
+        : IManager(blank), mouse_event(MouseEvent::MOUSE_NOT_CONTAINS), mouse_position() {}
 
 MouseEvent MouseManager::getMouseEvent() const {
     return this->mouse_event;
 }
 
 Vector2f MouseManager::getMousePosition() const {
-    return Vector2f(
-            static_cast<float>(this->mouse_position_x),
-            static_cast<float>(this->mouse_position_y)
-    );
+    return this->mouse_position;
 }
 
 void MouseManager::mouseButtonCallback(GLFWwindow *window, int button, int action, int mods) {
@@ -57,11 +52,15 @@ void MouseManager::mouseEnterCallback(GLFWwindow *window, int entered) {
 
 void MouseManager::mouseMoveCallback(GLFWwindow *window, double xpos, double ypos) {
     this->update();
+    
     if (this->mouse_event != MouseEvent::MOUSE_PRESS) {
         this->mouse_event = MouseEvent::MOUSE_MOVE;
     }
-    this->mouse_position_x = xpos;
-    this->mouse_position_y = ypos;
+
+    this->mouse_position = Vector2f(
+        static_cast<float>(xpos),
+        static_cast<float>(ypos)
+    );
 }
 
 void MouseManager::update() {
@@ -89,10 +88,12 @@ void MouseManager::start() {
         Blank* blank = static_cast<Blank*>(glfwGetWindowUserPointer(window));
         blank->getManager<MouseManager>()->mouseButtonCallback(window, button, action, mods);
     });
+
     glfwSetCursorEnterCallback(this->getBlank()->getWindow(), [](GLFWwindow* window, int entered) {
         Blank* blank = static_cast<Blank*>(glfwGetWindowUserPointer(window));
         blank->getManager<MouseManager>()->mouseEnterCallback(window, entered);
     });
+
     glfwSetCursorPosCallback(this->getBlank()->getWindow(), [](GLFWwindow* window, double xpos, double ypos) {
         Blank* blank = static_cast<Blank*>(glfwGetWindowUserPointer(window));
         blank->getManager<MouseManager>()->mouseMoveCallback(window, xpos, ypos);

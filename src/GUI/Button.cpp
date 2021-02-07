@@ -21,13 +21,16 @@ namespace GUI {
 
         Component::Transform* text_transform = text->getComponent<Component::Transform>();
 
-        text->setHeight(transform->getHeight() - transform->getHeight() * (border_radius + border_radius));
+        float ratio = this->transform->getWidth() / this->transform->getHeight();
+        text->setRatio(ratio);
 
-        float width = transform->getWidth() - text_transform->getWidth();
-        float height = transform->getHeight() - text_transform->getHeight();
+        text->setHeight(1.0f - 2.0f * border_radius);
+        if (text_transform->getWidth() > 1.0f) {
+            text->setWidth(1.0f - 2.0f * border_radius);
+        }
 
-        text_transform->setX(this->transform->getX() + width / 2.0f);
-        text_transform->setY(this->transform->getY() - height / 2.0f);
+        text_transform->setX((1.0f - text_transform->getWidth()) / 2.0f);
+        text_transform->setY((text_transform->getHeight() - 1.0f) / 2.0f);
 
         text->draw(shader);
     }

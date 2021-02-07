@@ -15,6 +15,8 @@ namespace Component {
     public:
         Transform();
 
+        void start() override;
+
         void setX(float x);
         float getX() const;
 
@@ -49,6 +51,9 @@ namespace Component {
     private:
         Vector3f position, size, rotation;
         glm::mat4 model_matrix;
+
+        Transform* findClosestParentTransform(GameObject* parent) const;
+        void updateChildTransform(GameObject* child);
 
         void logic_update_model_matrix();
 

@@ -24,11 +24,6 @@ namespace Component {
         callbacks[mouse_event] = std::move(callback);
     }
 
-    void InputMouse::start()
-    {
-        
-    }
-
     void InputMouse::update() {
         static bool init = false;
         if (!init) {
@@ -39,18 +34,14 @@ namespace Component {
         Vector2f mouse_position = this->getBlank()->unProj(
             this->getBlank()->getManager<MouseManager>()->getMousePosition()
         );
-        float mouse_x = mouse_position.getX(), mouse_y = mouse_position.getY();
 
         Component::Transform *transform = this->getParent()->getComponent<Component::Transform>();
         if (transform) {
-            bool mouse_on_button = (mouse_x > transform->getX() ||
-                abs(mouse_x - transform->getX()) < std::numeric_limits<float>::epsilon()) &&
-                (mouse_y < transform->getY() ||
-                    abs(mouse_y - transform->getY()) < std::numeric_limits<float>::epsilon()) &&
-                mouse_x < transform->getX() + transform->getWidth() &&
-                mouse_y > transform->getY() - transform->getHeight();
+            glm::vec4 mouse_in_obj_coordinates = glm::inverse(transform->getModelMatrix()) *
+                glm::vec4(mouse_position.getX(), mouse_position.getY(), -1.0f, 1.0f);
 
-            Vector2f mouse_pos(mouse_x, mouse_y);
+            bool mouse_on_button = (mouse_in_obj_coordinates.x >= 0 && mouse_in_obj_coordinates.x <= 1 &&
+                mouse_in_obj_coordinates.y <= 0 && mouse_in_obj_coordinates.y >= -1);
 
             int next_state[9][9] = {
                     {1, 1, 2, 8, 8, 5, 8, 1},
@@ -77,15 +68,15 @@ namespace Component {
                 }
 
                 if (this->getMouseEvent() == MouseEvent::MOUSE_NOT_CONTAINS || this->getMouseEvent() == MouseEvent::MOUSE_LEAVE) {
-                    this->mouseEvent(MouseEvent::MOUSE_ENTER, mouse_pos);
+                    this->mouseEvent(MouseEvent::MOUSE_ENTER, mouse_position);
                 }
                 else {
                     if (this->getMouseEvent() == MouseEvent::MOUSE_PRESS && new_state == MouseEvent::MOUSE_MOVE) {
-                        this->mouseEvent(MouseEvent::MOUSE_UP, mouse_pos);
-                        this->mouseEvent(MouseEvent::MOUSE_MOVE, mouse_pos);
+                        this->mouseEvent(MouseEvent::MOUSE_UP, mouse_position);
+                        this->mouseEvent(MouseEvent::MOUSE_MOVE, mouse_position);
                     } else {
                         auto ns = static_cast<MouseEvent>(next_state[static_cast<int>(this->getMouseEvent())][static_cast<int>(new_state)]);
-                        this->mouseEvent(ns, mouse_pos);
+                        this->mouseEvent(ns, mouse_position);
                     }
                 }
 
@@ -101,11 +92,11 @@ namespace Component {
                 case MouseEvent::MOUSE_CONTAINS:
                 case MouseEvent::MOUSE_ENTER:
                 case MouseEvent::MOUSE_UP:
-                    this->mouseEvent(MouseEvent::MOUSE_LEAVE, mouse_pos);
+                    this->mouseEvent(MouseEvent::MOUSE_LEAVE, mouse_position);
                     break;
 
                 case MouseEvent::MOUSE_LEAVE:
-                    this->mouseEvent(MouseEvent::MOUSE_NOT_CONTAINS, mouse_pos);
+                    this->mouseEvent(MouseEvent::MOUSE_NOT_CONTAINS, mouse_position);
                 case MouseEvent::MOUSE_NOT_CONTAINS:
                     break;
                 default:

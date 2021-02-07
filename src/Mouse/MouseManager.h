@@ -31,6 +31,6 @@ public:
 
 private:
     MouseEvent mouse_event;
-    double mouse_position_x, mouse_position_y;
+    Vector2f mouse_position;
 
 };

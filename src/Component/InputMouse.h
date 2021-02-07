@@ -17,7 +17,6 @@ namespace Component {
         InputMouse();
         virtual ~InputMouse() = default;
 
-        void start() override;
         void update() override;
 
         void mouseEvent(MouseEvent mouse_event, const Vector2f& position);

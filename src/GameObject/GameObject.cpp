@@ -29,3 +29,12 @@ void GameObject::addComponent(Component::IComponent *component) {
 void GameObject::removeComponent(Component::IComponent *component) {
     components.removeChild(component);
 }
+
+GameObject* GameObject::getParent() const {
+    return parent;
+}
+
+bool GameObject::addChildCallback(GameObject* child) {
+    child->parent = this;
+    return true;
+}

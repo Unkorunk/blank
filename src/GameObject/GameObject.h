@@ -29,15 +29,20 @@ public:
 
     void removeComponent(Component::IComponent* component);
 
+    GameObject* getParent() const;
+
 private:
     std::string name;
     ITreeStructure<Component::IComponent> components;
 
     Blank* blank = nullptr;
+    GameObject* parent = nullptr;
 
 protected:
     Blank* getBlank() const {
         return blank;
     }
+
+    bool addChildCallback(GameObject* child) override;
 
 };
