@@ -99,3 +99,15 @@ void MouseManager::start() {
         blank->getManager<MouseManager>()->mouseMoveCallback(window, xpos, ypos);
     });
 }
+
+void MouseManager::hideCursor() {
+    glfwSetInputMode(this->getBlank()->getWindow(), GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+}
+
+void MouseManager::disableCursor() {
+    glfwSetInputMode(this->getBlank()->getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+}
+
+void MouseManager::enableCursor() {
+    glfwSetInputMode(this->getBlank()->getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+}

@@ -3,7 +3,6 @@
   "width": 640,
   "height": 480,
   "fullscreen": false,
-  "project_type": "2d",
   "shaders": [
     "default"
   ],

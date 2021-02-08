@@ -12,14 +12,15 @@ IScene *SceneManager::getScene() const {
 
 void SceneManager::update(float delta_time)
 {
-    this->logic_change_scene();
+    this->changeScene();
 }
 
-void SceneManager::logic_change_scene()
+void SceneManager::changeScene()
 {
     if (query_scene) {
         this->query_scene.swap(this->selected_scene);
         this->query_scene.reset(nullptr);
         this->selected_scene->start();
+        this->selected_scene->startComponent();
     }
 }

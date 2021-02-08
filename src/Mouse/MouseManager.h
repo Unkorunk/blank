@@ -29,6 +29,10 @@ public:
     void mouseEnterCallback(GLFWwindow* window, int entered);
     void mouseMoveCallback(GLFWwindow* window, double xpos, double ypos);
 
+    void hideCursor();
+    void disableCursor();
+    void enableCursor();
+
 private:
     MouseEvent mouse_event;
     Vector2f mouse_position;

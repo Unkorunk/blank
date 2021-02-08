@@ -21,8 +21,6 @@ void GameObject::update() {
 void GameObject::addComponent(Component::IComponent *component) {
     component->parent = this;
     component->blank = this->blank;
-    // TODO: call that before first update
-    component->start();
     components.addChild(component);
 }
 

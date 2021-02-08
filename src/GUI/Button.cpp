@@ -29,8 +29,11 @@ namespace GUI {
             text->setWidth(1.0f - 2.0f * border_radius);
         }
 
-        text_transform->setX((1.0f - text_transform->getWidth()) / 2.0f);
-        text_transform->setY((text_transform->getHeight() - 1.0f) / 2.0f);
+        text_transform->setPosition(
+            (1.0f - text_transform->getWidth()) / 2.0f,
+            (text_transform->getHeight() - 1.0f) / 2.0f,
+            1.0f
+        );
 
         text->draw(shader);
     }

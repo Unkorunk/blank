@@ -54,11 +54,7 @@ Blank::~Blank()
 
 int Blank::run() {
     while (!glfwWindowShouldClose(window)) {
-        GLint mask = GL_COLOR_BUFFER_BIT;
-        if (Settings::getInstance().get<std::string>("project_type") == "3d") {
-            mask |= GL_DEPTH_BUFFER_BIT;
-        }
-        glClear(mask);
+        glClear(GL_COLOR_BUFFER_BIT);
 
         try {
             this->update();
@@ -100,12 +96,9 @@ void Blank::start() {
     }
 
     glClearColor(0.0f, 0.3f, 0.65f, 0.0f);
-    if (Settings::getInstance().get<std::string>("project_type") == "3d") {
-        glEnable(GL_DEPTH_TEST);
-    }
 
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     this->managers.addChild(new SceneManager(this));
     this->managers.addChild(new MouseManager(this));

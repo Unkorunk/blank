@@ -6,6 +6,7 @@
 
 #include <cmath>
 #include <glm/vec2.hpp>
+#include <box2d/b2_math.h>
 
 class Vector2f {
 public:
@@ -13,6 +14,7 @@ public:
     Vector2f(const Vector2f& data);
     Vector2f(float x, float y);
     explicit Vector2f(const glm::vec2& data);
+    explicit Vector2f(const b2Vec2& data);
 
     Vector2f& operator =(const Vector2f& data);
     Vector2f& operator =(const glm::vec2& data);
@@ -53,6 +55,7 @@ public:
     static bool equals(const Vector2f& lhs, const Vector2f& rhs, float epsilon);
 
     glm::vec2 toGLM() const;
+    b2Vec2 toBox2D() const;
 
 private:
     float x, y;

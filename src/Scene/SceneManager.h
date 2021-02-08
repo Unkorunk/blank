@@ -20,7 +20,7 @@ public:
         this->query_scene->blank = this->getBlank();
         this->query_scene->setShader(this->getBlank()->getManager<ResourceManager>()->getDefaultShader());
         if (!selected_scene) {
-            this->logic_change_scene();
+            this->changeScene();
         }
     }
 
@@ -29,7 +29,7 @@ public:
     void update(float delta_time) override;
 
 private:
-    void logic_change_scene();
+    void changeScene();
 
     std::unique_ptr<IScene> selected_scene;
     std::unique_ptr<IScene> query_scene;

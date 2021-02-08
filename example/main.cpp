@@ -13,6 +13,7 @@
 #include <GUI/Button.h>
 #include <GUI/Font.h>
 #include <GUI/Label.h>
+#include <Component/Physics.h>
 
 class FPSScene : public IScene {
 public:
@@ -57,57 +58,114 @@ public:
     void start() override {
         FPSScene::start();
 
-        const GLsizei texture_width = 33;
-        const GLsizei texture_height = 33;
-
-        std::unique_ptr<uint8_t[]> pixels(new uint8_t[texture_width * texture_height * 4]());
-
-        for (GLsizei i = 0; i < texture_height; i++) {
-            for (GLsizei j = 0; j < texture_width; j++) {
-                if ((i - 16) * (i - 16) + (j - 16) * (j - 16) <= 16 * 16) {
-                    pixels[4 * (i * texture_width + j) + 3] = 255;
-                }
-            }
-        }
-
-        texture_player.setData(texture_width, texture_height, pixels.get());
-
-        transform_player = texture_player.getComponent<Component::Transform>();
-        transform_player->setSize(0.1f, 0.1f, 1.0f);
-
-        this->addChild(&texture_player);
+        createCursor();
+        createPlayer();
+        createGround();
 
         this->mouse = this->getBlank()->getManager<MouseManager>();
+        this->mouse->hideCursor();
     }
 
     void update(float delta_time) override {
         FPSScene::update(delta_time);
 
-        transform_player->setPosition(Vector3f(position_player - Vector2f(transform_player->getWidth() / 2.0f, -transform_player->getHeight() / 2.0f)));
+        Vector2f mouse_position = this->getBlank()->unProj(
+            this->mouse->getMousePosition()
+        );
 
         // TODO: FIX: sometimes no MOUSE_DOWN event
-        if (this->mouse->getMouseEvent() == MouseEvent::MOUSE_DOWN || this->mouse->getMouseEvent() == MouseEvent::MOUSE_PRESS) {
-            target_position = this->getBlank()->unProj(
-                this->mouse->getMousePosition()
+        if (this->mouse->getMouseEvent() == MouseEvent::MOUSE_DOWN ||
+            this->mouse->getMouseEvent() == MouseEvent::MOUSE_PRESS) {
+            physics_player->addForce(
+                (mouse_position - transform_player->getPosition2D()).normalized() * 150.0f
             );
         }
 
-        if (Vector2f::distanceSqr(target_position, position_player) > 1e-4) {
-            Vector2f dir = (target_position - position_player).normalized();
-            
-            position_player = position_player + speed_player * dir * delta_time;
-        }
+        transform_cursor->setPosition2D(
+            mouse_position + Vector2f(
+                -transform_cursor->getWidth() / 2.0f,
+                transform_cursor->getHeight() / 2.0f
+            )
+        );
     }
-    
-private:
-    GUI::Texture texture_player;
-    Component::Transform* transform_player;
-    Vector2f position_player;
-    const float speed_player = 2.0f;
 
-    Vector2f target_position;
+private:
+    GUI::Texture cursor{32, 32}, player{32, 32}, ground{32, 32};
+    Component::Transform *transform_cursor, *transform_player;
+    std::unique_ptr<Component::Physics> physics_player, physics_ground;
 
     MouseManager* mouse;
+
+    void createCursor() {
+        for (GLsizei i = 0; i < 32; i++) {
+            for (GLsizei j = 0; j < 32; j++) {
+                if ((i - 16) * (i - 16) + (j - 16) * (j - 16) <= 16 * 16) {
+                    cursor.setPixel(i, j, GUI::Color(255, 0, 0));
+                }
+            }
+        }
+
+        transform_cursor = cursor.getComponent<Component::Transform>();
+        transform_cursor->setZ(1.0f);
+        transform_cursor->setSize2D(0.025f, 0.025f);
+
+        this->addChild(&cursor);
+    }
+
+    void createPlayer() {
+        for (GLsizei i = 0; i < 32; i++) {
+            for (GLsizei j = 0; j < 32; j++) {
+                if (i == 0 || i == 31 || j == 0 || j == 31) {
+                    player.setPixel(i, j, GUI::Color(0, 0, 0));
+                } else {
+                    player.setPixel(i, j, GUI::Color(180, 67, 134));
+                }
+            }
+        }
+
+        transform_player = player.getComponent<Component::Transform>();
+        transform_player->setZ(0.0f);
+        transform_player->setSize2D(0.1f, 0.1f);
+
+        physics_player = std::make_unique<Component::Physics>();
+        player.addComponent(physics_player.get());
+
+        this->addChild(&player);
+    }
+
+    void createGround() {
+        for (GLsizei i = 0; i < 32; i++) {
+            for (GLsizei j = 0; j < 32; j++) {
+                GUI::Color color;
+                if (j > 22) {
+                    color = GUI::Color(0, 69, 0);
+                } else if (j > 18) {
+                    color = (rand() % 2 == 0 ? GUI::Color(139, 69, 19) : GUI::Color(0, 69, 0));
+                } else {
+                    color = GUI::Color(139, 69, 19);
+                }
+
+                ground.setPixel(i, j, color);
+            }
+        }
+
+        physics_ground = std::make_unique<Component::Physics>();
+        physics_ground->setIsStaticBody(true);
+        ground.addComponent(physics_ground.get());
+
+        Component::Transform* ground_transform = ground.getComponent<Component::Transform>();
+        ground_transform->setSize2D(2.0f * 4.0f / 3.0f, 0.1f);
+        ground_transform->setPosition(-4.0f / 3.0f, -0.9f, 0.0f);
+        ground_transform->setRotation(
+            Vector3f(
+                ground_transform->getRotation().getX(),
+                ground_transform->getRotation().getY(),
+                0.0f
+            )
+        );
+
+        this->addChild(&ground);
+    }
 
 };
 
@@ -127,7 +185,7 @@ public:
         });
 
         this->button_start->setFont(roboto_font.get());
-        this->button_start->setText("Start");
+        this->button_start->setText("Click Me");
 
         this->button_hover_me = std::make_unique<GUI::Button>();
         this->button_hover_me->setX(-0.5f / 2.0f);

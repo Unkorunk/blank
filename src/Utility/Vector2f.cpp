@@ -8,6 +8,7 @@ Vector2f::Vector2f() : x(), y() {}
 Vector2f::Vector2f(const Vector2f &data) : x(data.x), y(data.y) {}
 Vector2f::Vector2f(float x, float y) : x(x), y(y) {}
 Vector2f::Vector2f(const glm::vec2& data) : x(data.x), y(data.y) {}
+Vector2f::Vector2f(const b2Vec2& data) : x(data.x), y(data.y) {}
 
 Vector2f& Vector2f::operator=(const Vector2f& data) = default;
 Vector2f& Vector2f::operator=(const glm::vec2& data) {
@@ -132,4 +133,8 @@ bool Vector2f::equals(const Vector2f &lhs, const Vector2f &rhs, float epsilon) {
 
 glm::vec2 Vector2f::toGLM() const {
     return glm::vec2(this->x, this->y);
+}
+
+b2Vec2 Vector2f::toBox2D() const {
+    return b2Vec2(this->x, this->y);
 }

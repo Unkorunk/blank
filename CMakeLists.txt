@@ -36,7 +36,8 @@ add_library(blank
         src/Component/Transform.cpp src/Component/Transform.h
         src/Component/InputMouse.cpp src/Component/InputMouse.h
         src/IManager.h
-        src/Physics/PhysicsManager.cpp src/Physics/PhysicsManager.h)
+        src/Physics/PhysicsManager.cpp src/Physics/PhysicsManager.h
+        src/Component/Physics.cpp src/Component/Physics.h)
 target_include_directories(blank PUBLIC src)
 
 if (MSVC)

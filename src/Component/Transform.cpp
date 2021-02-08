@@ -9,12 +9,12 @@ namespace Component {
     Transform::Transform() : position(), size(1.0f, 1.0f, 1.0f), rotation() {}
 
     void Transform::start() {
-        this->logic_update_model_matrix();
+        this->updateModelMatrix();
     }
 
     void Transform::setX(float x) {
         this->position.setX(x);
-        this->logic_update_model_matrix();
+        this->updateModelMatrix();
     }
     float Transform::getX() const {
         return this->position.getX();
@@ -22,7 +22,7 @@ namespace Component {
 
     void Transform::setY(float y) {
         this->position.setY(y);
-        this->logic_update_model_matrix();
+        this->updateModelMatrix();
     }
     float Transform::getY() const {
         return this->position.getY();
@@ -30,7 +30,7 @@ namespace Component {
 
     void Transform::setZ(float z) {
         this->position.setZ(z);
-        this->logic_update_model_matrix();
+        this->updateModelMatrix();
     }
     float Transform::getZ() const {
         return this->position.getZ();
@@ -38,7 +38,7 @@ namespace Component {
 
     void Transform::setWidth(float width) {
         this->size.setX(width);
-        this->logic_update_model_matrix();
+        this->updateModelMatrix();
     }
     float Transform::getWidth() const {
         return this->size.getX();
@@ -46,7 +46,7 @@ namespace Component {
 
     void Transform::setHeight(float height) {
         this->size.setY(height);
-        this->logic_update_model_matrix();
+        this->updateModelMatrix();
     }
     float Transform::getHeight() const {
         return this->size.getY();
@@ -54,7 +54,7 @@ namespace Component {
 
     void Transform::setDepth(float depth) {
         this->size.setZ(depth);
-        this->logic_update_model_matrix();
+        this->updateModelMatrix();
     }
     float Transform::getDepth() const {
         return this->size.getZ();
@@ -62,35 +62,63 @@ namespace Component {
 
     void Transform::setPosition(const Vector3f& position) {
         this->position = position;
-        this->logic_update_model_matrix();
+        this->updateModelMatrix();
     }
     void Transform::setPosition(float x, float y, float z) {
         this->position.setX(x);
         this->position.setY(y);
         this->position.setZ(z);
-        this->logic_update_model_matrix();
+        this->updateModelMatrix();
     }
     Vector3f Transform::getPosition() const {
         return this->position;
     }
 
+    void Transform::setPosition2D(const Vector2f& position) {
+        this->position.setX(position.getX());
+        this->position.setY(position.getY());
+        this->updateModelMatrix();
+    }
+    void Transform::setPosition2D(float x, float y) {
+        this->position.setX(x);
+        this->position.setY(y);
+        this->updateModelMatrix();
+    }
+    Vector2f Transform::getPosition2D() const {
+        return Vector2f(this->position.getX(), this->position.getY());
+    }
+
     void Transform::setSize(const Vector3f& size) {
         this->size = size;
-        this->logic_update_model_matrix();
+        this->updateModelMatrix();
     }
     void Transform::setSize(float width, float height, float depth) {
         this->size.setX(width);
         this->size.setY(height);
         this->size.setZ(depth);
-        this->logic_update_model_matrix();
+        this->updateModelMatrix();
     }
     Vector3f Transform::getSize() const {
         return this->size;
     }
 
+    void Transform::setSize2D(const Vector2f& size) {
+        this->size.setX(size.getX());
+        this->size.setY(size.getY());
+        this->updateModelMatrix();
+    }
+    void Transform::setSize2D(float width, float height) {
+        this->size.setX(width);
+        this->size.setY(height);
+        this->updateModelMatrix();
+    }
+    Vector2f Transform::getSize2D() const {
+        return Vector2f(this->size.getX(), this->size.getY());
+    }
+
     void Transform::setRotation(const Vector3f& rotation) {
         this->rotation = rotation;
-        this->logic_update_model_matrix();
+        this->updateModelMatrix();
     }
     Vector3f Transform::getRotation() const {
         return this->rotation;
@@ -115,7 +143,7 @@ namespace Component {
 
     void Transform::updateChildTransform(GameObject* child) {
         if (Transform* child_transform = child->getComponent<Transform>()) {
-            child_transform->logic_update_model_matrix();
+            child_transform->updateModelMatrix();
             return;
         }
 
@@ -124,7 +152,7 @@ namespace Component {
         }
     }
 
-    void Transform::logic_update_model_matrix() {
+    void Transform::updateModelMatrix() {
         glm::mat4 parent_model_matrix(1.0f);
         if (Transform* parent_transform = findClosestParentTransform(this->getParent()->getParent())) {
             parent_model_matrix = parent_transform->getModelMatrix();
@@ -139,5 +167,13 @@ namespace Component {
         for (GameObject* child : this->getParent()->getChildren()) {
             updateChildTransform(child);
         }
+
+        if (this->transform_update_callback) {
+            this->transform_update_callback(this);
+        }
+    }
+
+    void Transform::setTransformUpdateCallback(std::function<void(Transform*)> callback) {
+        this->transform_update_callback = std::move(callback);
     }
 }

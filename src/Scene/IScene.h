@@ -24,13 +24,29 @@ private:
     Shader *selected_shader = nullptr;
     Blank* blank = nullptr;
 
-    void logic_update_blank(GameObject* target) {
+    void startComponent() {
+        for (GameObject* it : this->getChildren()) {
+            startComponent(it);
+        }
+    }
+
+    void startComponent(GameObject* game_object) {
+        for (Component::IComponent* it : game_object->components.getChildren()) {
+            it->start();
+        }
+
+        for (GameObject* it : game_object->getChildren()) {
+            startComponent(it);
+        }
+    }
+
+    void updateBlank(GameObject* target) {
         target->blank = this->blank;
         for (Component::IComponent* component : target->components.getChildren()) {
             component->blank = this->blank;
         }
         for (GameObject* child : target->getChildren()) {
-            logic_update_blank(child);
+            updateBlank(child);
         }
     }
 
@@ -46,7 +62,7 @@ protected:
     }
 
     bool addChildCallback(GameObject *child) override {
-        logic_update_blank(child);
+        updateBlank(child);
         return true;
     }
 

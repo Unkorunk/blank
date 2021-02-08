@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <box2d/b2_world.h>
 
 #include "IManager.h"
@@ -12,7 +13,11 @@ public:
     void start() override;
     void update(float delta_time) override;
 
+    b2World* getWorld();
+
+    float getScaleFactor() const;
+
 private:
-    b2World world = b2World(b2Vec2(0.0f, -9.81f));
+    std::unique_ptr<b2World> world;
 
 };
