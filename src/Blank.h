@@ -7,6 +7,7 @@
 #include <iostream>
 #include <exception>
 #include <memory>
+#include <map>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -21,6 +22,7 @@
 #include "ResourceManager.h"
 #include "Physics/PhysicsManager.h"
 #include "Keyboard/KeyboardManager.hpp"
+#include "GUI/UIComponent.h"
 
 class Blank {
 public:
@@ -53,6 +55,9 @@ private:
     void updateProj();
     int window_width = 0, window_height = 0;
     glm::mat4 projection = glm::mat4(1.0f);
+
+    void drawUI(IScene* scene);
+    void drawUI(GameObject* obj, std::multimap<float, GUI::UIComponent*>& result, float current_z);
 
 protected:
 

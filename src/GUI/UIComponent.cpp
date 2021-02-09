@@ -46,6 +46,5 @@ namespace GUI {
 	void UIComponent::update()
 	{
         GameObject::update();
-        this->draw(this->getBlank()->getManager<SceneManager>()->getScene()->getShader());
 	}
 }

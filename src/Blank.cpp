@@ -130,11 +130,11 @@ void Blank::update() {
     if (scene != nullptr) {
         scene->update(delta_time);
 
-        scene->getShader()->activate();
         for (GameObject* game_object : scene->getChildren()) {
             game_object->update();
         }
-        scene->getShader()->deactivate();
+
+        this->drawUI(scene);
     }
 
     for (IManager* manager : this->managers.getChildren()) {
@@ -160,4 +160,31 @@ Vector2f Blank::unProj(const Vector2f& mouse_position) const {
     float ratio = static_cast<float>(window_width) / window_height;
     glm::vec4 un_proj = glm::inverse(projection) * glm::vec4(mouse_position.getX(), mouse_position.getY(), 1.0f, 1.0f);
     return Vector2f(2.0f * un_proj.x / window_width - ratio, -2.0f * un_proj.y / window_height + 1.0f);
+}
+
+void Blank::drawUI(IScene* scene) {
+    std::multimap<float, GUI::UIComponent*> result;
+    for (GameObject* obj : scene->getChildren()) {
+        this->drawUI(obj, result, 0.0f);
+    }
+
+    scene->getShader()->activate();
+    for (auto it = result.begin(); it != result.end(); it++) {
+        it->second->draw(scene->getShader());
+    }
+    scene->getShader()->deactivate();
+}
+
+void Blank::drawUI(GameObject* obj, std::multimap<float, GUI::UIComponent*>& result, float current_z) {
+    if (Component::Transform* transform = obj->getComponent<Component::Transform>()) {
+        current_z += transform->getZ();
+
+        if (GUI::UIComponent* ui = dynamic_cast<GUI::UIComponent*>(obj)) {
+            result.emplace(current_z, ui);
+        }
+    }
+
+    for (GameObject* obj : obj->getChildren()) {
+        this->drawUI(obj, result, current_z);
+    }
 }
