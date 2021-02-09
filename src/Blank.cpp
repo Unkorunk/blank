@@ -100,6 +100,10 @@ void Blank::start() {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+    glfwSetFramebufferSizeCallback(this->getWindow(), [](GLFWwindow* window, int width, int height) {
+        glViewport(0, 0, width, height);
+    });
+
     this->managers.addChild(new SceneManager(this));
     this->managers.addChild(new MouseManager(this));
     this->managers.addChild(new ResourceManager(this));
@@ -143,7 +147,7 @@ GLFWwindow *Blank::getWindow() const {
 }
 
 void Blank::updateProj() {
-    glfwGetWindowSize(this->getWindow(), &window_width, &window_height);
+    glfwGetFramebufferSize(this->getWindow(), &window_width, &window_height);
     float ratio = static_cast<float>(window_width) / window_height;
     projection = glm::ortho(-ratio, ratio, -1.0f, 1.0f, -1.0f, 1.0f);
 }

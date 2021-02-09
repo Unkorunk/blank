@@ -188,18 +188,18 @@ public:
     void start() override {
         FPSScene::start();
 
-        this->button_start = std::make_unique<GUI::Button>();
+        this->button_click_me = std::make_unique<GUI::Button>();
 
-        this->button_start->setX(-0.5f / 2.0f);
-        this->button_start->setY(0.15f / 2.0f);
-        this->button_start->setWidth(1.0f / 2.0f);
-        this->button_start->setHeight(0.3f / 2.0f);
-        this->button_start->setMouseCallback(MouseEvent::UP, [this](const Vector2f& position) {
+        this->button_click_me->setX(-0.5f / 2.0f);
+        this->button_click_me->setY(0.15f / 2.0f);
+        this->button_click_me->setWidth(1.0f / 2.0f);
+        this->button_click_me->setHeight(0.3f / 2.0f);
+        this->button_click_me->setMouseCallback(MouseEvent::UP, [this](const Vector2f& position) {
             this->getBlank()->getManager<SceneManager>()->create<GameScene>();
         });
 
-        this->button_start->setFont(roboto_font.get());
-        this->button_start->setText("Click Me");
+        this->button_click_me->setFont(roboto_font.get());
+        this->button_click_me->setText("Click Me");
 
         this->button_hover_me = std::make_unique<GUI::Button>();
         this->button_hover_me->setX(-0.5f / 2.0f);
@@ -210,7 +210,7 @@ public:
         this->button_hover_me->setFont(roboto_font.get());
         this->button_hover_me->setText("Hover Me");
 
-        this->game_object_ui.addChild(button_start.get());
+        this->game_object_ui.addChild(button_click_me.get());
         this->game_object_ui.addChild(button_hover_me.get());
 
         this->addChild(&game_object_ui);
@@ -231,7 +231,7 @@ public:
     }
 
 private:
-    std::unique_ptr<GUI::Button> button_start;
+    std::unique_ptr<GUI::Button> button_click_me;
     std::unique_ptr<GUI::Button> button_hover_me;
 
     GameObject game_object_ui;
