@@ -29,9 +29,20 @@ public:
         this->fps_label->setFont(roboto_font.get());
 
         this->addChild(this->fps_label.get());
+
+        this->keyboard = this->getBlank()->getManager<KeyboardManager>();
     }
 
     void update(float delta_time) override {
+        if (keyboard->getKeyboardEvent(KeyboardKey::KEY_F) == KeyboardEvent::UP) {
+            this->fps_label_enabled = !this->fps_label_enabled;
+        }
+
+        if (!this->fps_label_enabled) {
+            this->fps_label->setText("");
+            return;
+        }
+
         this->mytime_fps += delta_time;
         if (this->mytime_fps > 1.0f) {
             this->fps_label->setText(std::to_string(static_cast<size_t>(this->frames / this->mytime_fps)));
@@ -50,6 +61,9 @@ private:
     std::unique_ptr<GUI::Label> fps_label;
     float mytime_fps = 0.0f;
     size_t frames = 0;
+    bool fps_label_enabled = true;
+
+    KeyboardManager* keyboard;
 
 };
 
@@ -74,8 +88,8 @@ public:
         );
 
         // TODO: FIX: sometimes no MOUSE_DOWN event
-        if (this->mouse->getMouseEvent() == MouseEvent::MOUSE_DOWN ||
-            this->mouse->getMouseEvent() == MouseEvent::MOUSE_PRESS) {
+        if (this->mouse->getMouseEvent() == MouseEvent::DOWN ||
+            this->mouse->getMouseEvent() == MouseEvent::PRESS) {
             physics_player->addForce(
                 (mouse_position - transform_player->getPosition2D()).normalized() * 150.0f
             );
@@ -180,7 +194,7 @@ public:
         this->button_start->setY(0.15f / 2.0f);
         this->button_start->setWidth(1.0f / 2.0f);
         this->button_start->setHeight(0.3f / 2.0f);
-        this->button_start->setMouseCallback(MouseEvent::MOUSE_UP, [this](const Vector2f& position) {
+        this->button_start->setMouseCallback(MouseEvent::UP, [this](const Vector2f& position) {
             this->getBlank()->getManager<SceneManager>()->create<GameScene>();
         });
 
@@ -207,8 +221,8 @@ public:
     void update(float delta_time) override {
         FPSScene::update(delta_time);
 
-        if (this->button_hover_me->getMouseEvent() == MouseEvent::MOUSE_MOVE ||
-            this->button_hover_me->getMouseEvent() == MouseEvent::MOUSE_CONTAINS) {
+        if (this->button_hover_me->getMouseEvent() == MouseEvent::MOVE ||
+            this->button_hover_me->getMouseEvent() == MouseEvent::CONTAINS) {
             Component::Transform* button_rotate_tranform = this->button_hover_me->getComponent<Component::Transform>();
             button_rotate_tranform->setRotation(
                 button_rotate_tranform->getRotation() + Vector3f(0.0f, 0.0f, 3.0f) * delta_time

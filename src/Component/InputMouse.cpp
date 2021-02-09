@@ -6,7 +6,7 @@
 #include "Blank.h"
 
 namespace Component {
-    InputMouse::InputMouse() : mouse_event(MouseEvent::MOUSE_NOT_CONTAINS) {}
+    InputMouse::InputMouse() : mouse_event(MouseEvent::NOT_CONTAINS) {}
 
     void InputMouse::mouseEvent(MouseEvent mouse_event, const Vector2f& position) {
         this->mouse_event = mouse_event;
@@ -57,47 +57,47 @@ namespace Component {
 
             if (mouse_on_button) {
                 MouseEvent new_state = this->getBlank()->getManager<MouseManager>()->getMouseEvent();
-                if ((this->getMouseEvent() == MouseEvent::MOUSE_MOVE || this->getMouseEvent() == MouseEvent::MOUSE_CONTAINS) &&
-                    new_state == MouseEvent::MOUSE_PRESS) {
+                if ((this->getMouseEvent() == MouseEvent::MOVE || this->getMouseEvent() == MouseEvent::CONTAINS) &&
+                    new_state == MouseEvent::PRESS) {
                     if (Vector2f::distanceSqr(prev_mouse_position, mouse_position) > 1e-4) {
-                        new_state = MouseEvent::MOUSE_MOVE;
+                        new_state = MouseEvent::MOVE;
                     }
                     else {
-                        new_state = MouseEvent::MOUSE_CONTAINS;
+                        new_state = MouseEvent::CONTAINS;
                     }
                 }
 
-                if (this->getMouseEvent() == MouseEvent::MOUSE_NOT_CONTAINS || this->getMouseEvent() == MouseEvent::MOUSE_LEAVE) {
-                    this->mouseEvent(MouseEvent::MOUSE_ENTER, mouse_position);
+                if (this->getMouseEvent() == MouseEvent::NOT_CONTAINS || this->getMouseEvent() == MouseEvent::LEAVE) {
+                    this->mouseEvent(MouseEvent::ENTER, mouse_position);
                 }
                 else {
-                    if (this->getMouseEvent() == MouseEvent::MOUSE_PRESS && new_state == MouseEvent::MOUSE_MOVE) {
-                        this->mouseEvent(MouseEvent::MOUSE_UP, mouse_position);
-                        this->mouseEvent(MouseEvent::MOUSE_MOVE, mouse_position);
+                    if (this->getMouseEvent() == MouseEvent::PRESS && new_state == MouseEvent::MOVE) {
+                        this->mouseEvent(MouseEvent::UP, mouse_position);
+                        this->mouseEvent(MouseEvent::MOVE, mouse_position);
                     } else {
                         auto ns = static_cast<MouseEvent>(next_state[static_cast<int>(this->getMouseEvent())][static_cast<int>(new_state)]);
                         this->mouseEvent(ns, mouse_position);
                     }
                 }
 
-                if (this->getMouseEvent() == MouseEvent::MOUSE_UNDEFINED_BEHAVIOUR) {
+                if (this->getMouseEvent() == MouseEvent::UNDEFINED_BEHAVIOUR) {
                     throw std::runtime_error("Undefined behaviour");
                 }
             }
             else {
                 switch (this->getMouseEvent()) {
-                case MouseEvent::MOUSE_MOVE:
-                case MouseEvent::MOUSE_PRESS:
-                case MouseEvent::MOUSE_DOWN:
-                case MouseEvent::MOUSE_CONTAINS:
-                case MouseEvent::MOUSE_ENTER:
-                case MouseEvent::MOUSE_UP:
-                    this->mouseEvent(MouseEvent::MOUSE_LEAVE, mouse_position);
+                case MouseEvent::MOVE:
+                case MouseEvent::PRESS:
+                case MouseEvent::DOWN:
+                case MouseEvent::CONTAINS:
+                case MouseEvent::ENTER:
+                case MouseEvent::UP:
+                    this->mouseEvent(MouseEvent::LEAVE, mouse_position);
                     break;
 
-                case MouseEvent::MOUSE_LEAVE:
-                    this->mouseEvent(MouseEvent::MOUSE_NOT_CONTAINS, mouse_position);
-                case MouseEvent::MOUSE_NOT_CONTAINS:
+                case MouseEvent::LEAVE:
+                    this->mouseEvent(MouseEvent::NOT_CONTAINS, mouse_position);
+                case MouseEvent::NOT_CONTAINS:
                     break;
                 default:
                     throw std::runtime_error("Undefined behaviour");

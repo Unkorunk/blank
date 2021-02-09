@@ -20,6 +20,7 @@
 #include "Mouse/MouseManager.h"
 #include "ResourceManager.h"
 #include "Physics/PhysicsManager.h"
+#include "Keyboard/KeyboardManager.hpp"
 
 class Blank {
 public:

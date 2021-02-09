@@ -37,7 +37,10 @@ add_library(blank
         src/Component/InputMouse.cpp src/Component/InputMouse.h
         src/IManager.h
         src/Physics/PhysicsManager.cpp src/Physics/PhysicsManager.h
-        src/Component/Physics.cpp src/Component/Physics.h)
+        src/Component/Physics.cpp src/Component/Physics.h
+        src/Keyboard/KeyboardManager.cpp src/Keyboard/KeyboardManager.hpp
+        src/Keyboard/KeyboardEvent.hpp
+        src/Keyboard/KeyboardKey.hpp)
 target_include_directories(blank PUBLIC src)
 
 if (MSVC)

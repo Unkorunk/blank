@@ -104,6 +104,7 @@ void Blank::start() {
     this->managers.addChild(new MouseManager(this));
     this->managers.addChild(new ResourceManager(this));
     this->managers.addChild(new PhysicsManager(this));
+    this->managers.addChild(new KeyboardManager(this));
 
     for (IManager* manager : this->managers.getChildren()) {
         manager->start();

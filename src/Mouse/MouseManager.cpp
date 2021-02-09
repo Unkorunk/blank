@@ -6,7 +6,7 @@
 #include "Blank.h"
 
 MouseManager::MouseManager(Blank *blank)
-        : IManager(blank), mouse_event(MouseEvent::MOUSE_NOT_CONTAINS), mouse_position() {}
+        : IManager(blank), mouse_event(MouseEvent::NOT_CONTAINS), mouse_position() {}
 
 MouseEvent MouseManager::getMouseEvent() const {
     return this->mouse_event;
@@ -20,20 +20,20 @@ void MouseManager::mouseButtonCallback(GLFWwindow *window, int button, int actio
     if (button == GLFW_MOUSE_BUTTON_LEFT) {
         if (action == GLFW_PRESS) {
             switch (mouse_event) {
-                case MouseEvent::MOUSE_UP:
-                case MouseEvent::MOUSE_ENTER:
-                case MouseEvent::MOUSE_CONTAINS:
-                case MouseEvent::MOUSE_MOVE:
-                    mouse_event = MouseEvent::MOUSE_DOWN;
+                case MouseEvent::UP:
+                case MouseEvent::ENTER:
+                case MouseEvent::CONTAINS:
+                case MouseEvent::MOVE:
+                    mouse_event = MouseEvent::DOWN;
                     break;
-                case MouseEvent::MOUSE_DOWN:
-                case MouseEvent::MOUSE_PRESS:
-                case MouseEvent::MOUSE_LEAVE:
-                case MouseEvent::MOUSE_NOT_CONTAINS:
+                case MouseEvent::DOWN:
+                case MouseEvent::PRESS:
+                case MouseEvent::LEAVE:
+                case MouseEvent::NOT_CONTAINS:
                     throw std::runtime_error("Undefined behavior");
             }
         } else if (action == GLFW_RELEASE) {
-            mouse_event = MouseEvent::MOUSE_UP;
+            mouse_event = MouseEvent::UP;
         } else {
             throw std::runtime_error("Undefined behavior");
         }
@@ -42,9 +42,9 @@ void MouseManager::mouseButtonCallback(GLFWwindow *window, int button, int actio
 
 void MouseManager::mouseEnterCallback(GLFWwindow *window, int entered) {
     if (entered == GLFW_TRUE) {
-        this->mouse_event = MouseEvent::MOUSE_ENTER;
+        this->mouse_event = MouseEvent::ENTER;
     } else if (entered == GLFW_FALSE) {
-        this->mouse_event = MouseEvent::MOUSE_LEAVE;
+        this->mouse_event = MouseEvent::LEAVE;
     } else {
         throw std::runtime_error("Undefined behavior");
     }
@@ -53,8 +53,8 @@ void MouseManager::mouseEnterCallback(GLFWwindow *window, int entered) {
 void MouseManager::mouseMoveCallback(GLFWwindow *window, double xpos, double ypos) {
     this->update(0.0f);
     
-    if (this->mouse_event != MouseEvent::MOUSE_PRESS) {
-        this->mouse_event = MouseEvent::MOUSE_MOVE;
+    if (this->mouse_event != MouseEvent::PRESS) {
+        this->mouse_event = MouseEvent::MOVE;
     }
 
     this->mouse_position = Vector2f(
@@ -65,18 +65,18 @@ void MouseManager::mouseMoveCallback(GLFWwindow *window, double xpos, double ypo
 
 void MouseManager::update(float delta_time) {
     switch (mouse_event) {
-        case MouseEvent::MOUSE_DOWN:
-            mouse_event = MouseEvent::MOUSE_PRESS;
+        case MouseEvent::DOWN:
+            mouse_event = MouseEvent::PRESS;
             break;
-        case MouseEvent::MOUSE_UP:
-        case MouseEvent::MOUSE_ENTER:
-            mouse_event = MouseEvent::MOUSE_CONTAINS;
+        case MouseEvent::UP:
+        case MouseEvent::ENTER:
+            mouse_event = MouseEvent::CONTAINS;
             break;
-        case MouseEvent::MOUSE_LEAVE:
-            mouse_event = MouseEvent::MOUSE_NOT_CONTAINS;
+        case MouseEvent::LEAVE:
+            mouse_event = MouseEvent::NOT_CONTAINS;
             break;
-        case MouseEvent::MOUSE_MOVE:
-            mouse_event = MouseEvent::MOUSE_CONTAINS;
+        case MouseEvent::MOVE:
+            mouse_event = MouseEvent::CONTAINS;
             break;
         default:
             break;
