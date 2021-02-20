@@ -75,6 +75,10 @@ int Blank::run() {
             glfwTerminate();
             return 1;
         }
+
+        for (IManager* manager : this->managers.getChildren()) {
+            manager->lateUpdate();
+        }
     }
 
     glfwTerminate();

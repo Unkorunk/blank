@@ -12,6 +12,7 @@ public:
 
     virtual void start() {}
     virtual void update(float delta_time) {}
+    virtual void lateUpdate() {}
 
 private:
     Blank* blank;

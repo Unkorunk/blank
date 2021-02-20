@@ -40,7 +40,21 @@ namespace GUI {
         void setBorderRadius(float border_radius);
         float getBorderRadius() const;
 
-        MouseEvent getMouseEvent() const;
+        bool check(const MouseEvent& mouse_event) {
+            return input_mouse->check(mouse_event);
+        }
+        bool isMove() const {
+            return input_mouse->isMove();
+        }
+        bool isContains() const {
+            return input_mouse->isContains();
+        }
+        bool isEnter() const {
+            return input_mouse->isEnter();
+        }
+        bool isLeave() const {
+            return input_mouse->isLeave();
+        }
         void setMouseCallback(MouseEvent mouse_event, std::function<void(const Vector2f&)> callback);
 
     private:

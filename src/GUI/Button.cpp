@@ -173,10 +173,6 @@ namespace GUI {
         this->addChild(text.get());
     }
 
-    MouseEvent Button::getMouseEvent() const {
-        return this->input_mouse->getMouseEvent();
-    }
-
     void Button::setMouseCallback(MouseEvent mouse_event, std::function<void(const Vector2f&)> callback) {
         this->input_mouse->setMouseCallback(mouse_event, std::move(callback));
     }

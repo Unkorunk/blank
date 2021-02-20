@@ -1,17 +1,8 @@
-//
-// Created by unkorunk on 22.02.2020.
-//
-
 #pragma once
 
 enum class MouseEvent {
-    DOWN,
-    PRESS,
-    UP,
-    ENTER,
-    CONTAINS,
-    LEAVE,
-    NOT_CONTAINS,
-    MOVE,
-    UNDEFINED_BEHAVIOUR
+    NONE     = 0,
+    DOWN     = 1,
+    PRESS    = 2,
+    UP       = 4
 };

@@ -1,23 +1,16 @@
-//
-// Created by unkorunk on 22.02.2020.
-//
-
 #include "InputMouse.h"
 #include "Blank.h"
 
 namespace Component {
-    InputMouse::InputMouse() : mouse_event(MouseEvent::NOT_CONTAINS) {}
+    InputMouse::InputMouse() : mouse_event(MouseEvent::NONE) {}
 
     void InputMouse::mouseEvent(MouseEvent mouse_event, const Vector2f& position) {
-        this->mouse_event = mouse_event;
-        auto iter = callbacks.find(mouse_event);
-        if (iter != callbacks.end() && iter->second) {
-            iter->second(position);
+        for (const auto& it : callbacks) {
+            using T = std::underlying_type_t<MouseEvent>;
+            if (static_cast<T>(it.first) & static_cast<T>(mouse_event)) {
+                it.second(position);
+            }
         }
-    }
-
-    MouseEvent InputMouse::getMouseEvent() const {
-        return this->mouse_event;
     }
 
     void InputMouse::setMouseCallback(MouseEvent mouse_event, std::function<void(const Vector2f&)> callback) {
@@ -25,86 +18,69 @@ namespace Component {
     }
 
     void InputMouse::update() {
-        static bool init = false;
-        if (!init) {
-            this->prev_mouse_position = this->getBlank()->getManager<MouseManager>()->getMousePosition();
-            init = true;
-        }
+        MouseEvent old_mouse_event = this->mouse_event;
+        bool old_is_contains = this->is_contains;
+
+        this->mouse_event = MouseEvent::NONE;
+        this->is_contains = false;
+        this->is_enter = false;
+        this->is_leave = false;
+        this->is_move = false;
 
         Vector2f mouse_position = this->getBlank()->unProj(
             this->getBlank()->getManager<MouseManager>()->getMousePosition()
         );
 
-        Component::Transform *transform = this->getParent()->getComponent<Component::Transform>();
-        if (transform) {
-            glm::vec4 mouse_in_obj_coordinates = glm::inverse(transform->getModelMatrix()) *
-                glm::vec4(mouse_position.getX(), mouse_position.getY(), -1.0f, 1.0f);
+        Component::Transform* transform = this->getParent()->getComponent<Component::Transform>();
+        MouseManager* mouse = this->getBlank()->getManager<MouseManager>();
 
-            bool mouse_on_button = (mouse_in_obj_coordinates.x >= 0 && mouse_in_obj_coordinates.x <= 1 &&
-                mouse_in_obj_coordinates.y <= 0 && mouse_in_obj_coordinates.y >= -1);
-
-            int next_state[9][9] = {
-                    {1, 1, 2, 8, 8, 5, 8, 1},
-                    {8, 1, 2, 8, 8, 5, 8, 8},
-                    {0, 8, 8, 8, 4, 5, 8, 7},
-                    {0, 7, 8, 8, 4, 5, 8, 7},
-                    {0, 7, 4, 8, 4, 5, 8, 7},
-                    {8, 8, 8, 3, 8, 8, 6, 8},
-                    {8, 8, 8, 3, 8, 8, 6, 8},
-                    {0, 8, 4, 8, 4, 5, 8, 7},
-                    {8, 8, 8, 8, 8, 8, 8, 8}
-            };
-
-            if (mouse_on_button) {
-                MouseEvent new_state = this->getBlank()->getManager<MouseManager>()->getMouseEvent();
-                if ((this->getMouseEvent() == MouseEvent::MOVE || this->getMouseEvent() == MouseEvent::CONTAINS) &&
-                    new_state == MouseEvent::PRESS) {
-                    if (Vector2f::distanceSqr(prev_mouse_position, mouse_position) > 1e-4) {
-                        new_state = MouseEvent::MOVE;
-                    }
-                    else {
-                        new_state = MouseEvent::CONTAINS;
-                    }
-                }
-
-                if (this->getMouseEvent() == MouseEvent::NOT_CONTAINS || this->getMouseEvent() == MouseEvent::LEAVE) {
-                    this->mouseEvent(MouseEvent::ENTER, mouse_position);
-                }
-                else {
-                    if (this->getMouseEvent() == MouseEvent::PRESS && new_state == MouseEvent::MOVE) {
-                        this->mouseEvent(MouseEvent::UP, mouse_position);
-                        this->mouseEvent(MouseEvent::MOVE, mouse_position);
-                    } else {
-                        auto ns = static_cast<MouseEvent>(next_state[static_cast<int>(this->getMouseEvent())][static_cast<int>(new_state)]);
-                        this->mouseEvent(ns, mouse_position);
-                    }
-                }
-
-                if (this->getMouseEvent() == MouseEvent::UNDEFINED_BEHAVIOUR) {
-                    throw std::runtime_error("Undefined behaviour");
-                }
-            }
-            else {
-                switch (this->getMouseEvent()) {
-                case MouseEvent::MOVE:
-                case MouseEvent::PRESS:
-                case MouseEvent::DOWN:
-                case MouseEvent::CONTAINS:
-                case MouseEvent::ENTER:
-                case MouseEvent::UP:
-                    this->mouseEvent(MouseEvent::LEAVE, mouse_position);
-                    break;
-
-                case MouseEvent::LEAVE:
-                    this->mouseEvent(MouseEvent::NOT_CONTAINS, mouse_position);
-                case MouseEvent::NOT_CONTAINS:
-                    break;
-                default:
-                    throw std::runtime_error("Undefined behaviour");
-                }
-            }
+        if (!transform || !mouse) {
+            throw std::exception();
         }
 
-        this->prev_mouse_position = mouse_position;
+        glm::vec4 mouse_in_obj_coordinates = glm::inverse(transform->getModelMatrix()) *
+            glm::vec4(mouse_position.getX(), mouse_position.getY(), -1.0f, 1.0f);
+
+        this->mouse_position = Vector2f(mouse_in_obj_coordinates.x, mouse_in_obj_coordinates.y);
+
+        if (mouse_in_obj_coordinates.x >= 0 && mouse_in_obj_coordinates.x <= 1 &&
+            mouse_in_obj_coordinates.y <= 0 && mouse_in_obj_coordinates.y >= -1) {
+            if (!old_is_contains) {
+                this->is_enter = true;
+            }
+
+            this->is_contains = true;
+
+            bool press_or_down = this->check(old_mouse_event, MouseEvent::DOWN) ||
+                this->check(old_mouse_event, MouseEvent::PRESS);
+
+            if (mouse->check(MouseKey::BUTTON_LEFT, MouseEvent::DOWN)) {
+                this->setMouseEvent(MouseEvent::DOWN);
+            } else if (press_or_down && mouse->check(MouseKey::BUTTON_LEFT, MouseEvent::PRESS)) {
+                this->setMouseEvent(MouseEvent::PRESS);
+            }
+
+            if (press_or_down && mouse->check(MouseKey::BUTTON_LEFT, MouseEvent::UP)) {
+                this->setMouseEvent(MouseEvent::UP);
+            }
+
+            if (mouse->isMove()) {
+                this->is_move = true;
+            }
+        } else {
+            if (old_is_contains) {
+                this->is_leave = true;
+            }
+        }
+    }
+
+    void InputMouse::setMouseEvent(const MouseEvent& mouse_event) {
+        using T = std::underlying_type_t<MouseEvent>;
+        this->mouse_event = static_cast<MouseEvent>(static_cast<T>(this->mouse_event) | static_cast<T>(mouse_event));
+        this->mouseEvent(mouse_event, this->mouse_position);
+    }
+
+    Vector2f InputMouse::getMousePosition() const {
+        return this->mouse_position;
     }
 }

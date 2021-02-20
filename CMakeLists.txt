@@ -25,8 +25,9 @@ add_library(blank
         src/GUI/Font.cpp src/GUI/Font.h
         src/GUI/Texture.cpp src/GUI/Texture.h
         src/GUI/Color.cpp src/GUI/Color.h
-        src/Mouse/MouseEvent.h
         src/Mouse/MouseManager.cpp src/Mouse/MouseManager.h
+        src/Mouse/MouseEvent.h
+        src/Mouse/MouseKey.hpp
         src/Utility/Vector2f.cpp src/Utility/Vector2f.h
         src/Utility/Vector3f.cpp src/Utility/Vector3f.h
         src/Scene/SceneManager.cpp src/Scene/SceneManager.h

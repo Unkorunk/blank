@@ -1,61 +1,36 @@
-//
-// Created by unkorunk on 22.02.2020.
-//
-
 #include "MouseManager.h"
 #include "Blank.h"
 
-MouseManager::MouseManager(Blank *blank)
-        : IManager(blank), mouse_event(MouseEvent::NOT_CONTAINS), mouse_position() {}
-
-MouseEvent MouseManager::getMouseEvent() const {
-    return this->mouse_event;
-}
+MouseManager::MouseManager(Blank *blank) : IManager(blank) {}
 
 Vector2f MouseManager::getMousePosition() const {
     return this->mouse_position;
 }
 
 void MouseManager::mouseButtonCallback(GLFWwindow *window, int button, int action, int mods) {
-    if (button == GLFW_MOUSE_BUTTON_LEFT) {
-        if (action == GLFW_PRESS) {
-            switch (mouse_event) {
-                case MouseEvent::UP:
-                case MouseEvent::ENTER:
-                case MouseEvent::CONTAINS:
-                case MouseEvent::MOVE:
-                    mouse_event = MouseEvent::DOWN;
-                    break;
-                case MouseEvent::DOWN:
-                case MouseEvent::PRESS:
-                case MouseEvent::LEAVE:
-                case MouseEvent::NOT_CONTAINS:
-                    throw std::runtime_error("Undefined behavior");
-            }
-        } else if (action == GLFW_RELEASE) {
-            mouse_event = MouseEvent::UP;
-        } else {
-            throw std::runtime_error("Undefined behavior");
-        }
+    if (action == GLFW_PRESS) {
+        setMouseEvent(static_cast<MouseKey>(button), MouseEvent::DOWN);
+    } else if (action == GLFW_RELEASE) {
+        setMouseEvent(static_cast<MouseKey>(button), MouseEvent::UP);
+    } else {
+        throw std::runtime_error("Undefined behavior");
     }
 }
 
 void MouseManager::mouseEnterCallback(GLFWwindow *window, int entered) {
     if (entered == GLFW_TRUE) {
-        this->mouse_event = MouseEvent::ENTER;
+        this->is_enter = true;
+        this->is_contains = true;
     } else if (entered == GLFW_FALSE) {
-        this->mouse_event = MouseEvent::LEAVE;
+        this->is_leave = true;
+        this->is_contains = false;
     } else {
         throw std::runtime_error("Undefined behavior");
     }
 }
 
 void MouseManager::mouseMoveCallback(GLFWwindow *window, double xpos, double ypos) {
-    this->update(0.0f);
-    
-    if (this->mouse_event != MouseEvent::PRESS) {
-        this->mouse_event = MouseEvent::MOVE;
-    }
+    this->is_move = true;
 
     this->mouse_position = Vector2f(
         static_cast<float>(xpos),
@@ -64,22 +39,24 @@ void MouseManager::mouseMoveCallback(GLFWwindow *window, double xpos, double ypo
 }
 
 void MouseManager::update(float delta_time) {
-    switch (mouse_event) {
-        case MouseEvent::DOWN:
-            mouse_event = MouseEvent::PRESS;
-            break;
-        case MouseEvent::UP:
-        case MouseEvent::ENTER:
-            mouse_event = MouseEvent::CONTAINS;
-            break;
-        case MouseEvent::LEAVE:
-            mouse_event = MouseEvent::NOT_CONTAINS;
-            break;
-        case MouseEvent::MOVE:
-            mouse_event = MouseEvent::CONTAINS;
-            break;
-        default:
-            break;
+    for (auto& it : this->events) {
+        this->old_events[it.first] = it.second;
+        it.second = MouseEvent::NONE;
+    }
+
+    this->is_move = false;
+    this->is_enter = false;
+    this->is_leave = false;
+}
+
+void MouseManager::lateUpdate() {
+    for (auto& it : this->events) {
+        MouseEvent old_mouse_event = this->getOldMouseEvent(it.first);
+        if (!this->check(it.first, MouseEvent::UP) && !this->check(old_mouse_event, MouseEvent::UP)) {
+            if (this->check(old_mouse_event, MouseEvent::DOWN) || this->check(old_mouse_event, MouseEvent::PRESS)) {
+                setMouseEvent(it.first, MouseEvent::PRESS);
+            }
+        }
     }
 }
 
@@ -110,4 +87,14 @@ void MouseManager::disableCursor() {
 
 void MouseManager::enableCursor() {
     glfwSetInputMode(this->getBlank()->getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+}
+
+void MouseManager::setMouseEvent(const MouseKey& mouse_key, const MouseEvent& mouse_event) {
+    using T = std::underlying_type_t<MouseEvent>;
+    events[mouse_key] = static_cast<MouseEvent>(static_cast<T>(this->getMouseEvent(mouse_key)) | static_cast<T>(mouse_event));
+}
+
+void MouseManager::unsetMouseEvent(const MouseKey& mouse_key, const MouseEvent& mouse_event) {
+    using T = std::underlying_type_t<MouseEvent>;
+    events[mouse_key] = static_cast<MouseEvent>(static_cast<T>(this->getMouseEvent(mouse_key)) & ~static_cast<T>(mouse_event));
 }

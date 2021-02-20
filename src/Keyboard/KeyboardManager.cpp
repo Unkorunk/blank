@@ -14,6 +14,8 @@ void KeyboardManager::update(float delta_time) {
     for (auto& it : this->events) {
         if (it.second == KeyboardEvent::UP) {
             it.second = KeyboardEvent::NONE;
+        } else if (it.second == KeyboardEvent::DOWN) {
+            it.second = KeyboardEvent::PRESS;
         }
     }
 }
